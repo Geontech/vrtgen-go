@@ -6,22 +6,22 @@ import (
 )
 
 const (
-	PolarizationBits         = uint8(32)
-	PointingVectorBits       = uint8(32)
-	SpatialReferenceTypeBits = uint8(64)
-	BeamWidthBits            = uint8(32)
-	EbNoBERBits              = uint8(32)
-	ThresholdBits            = uint8(32)
-	InterceptPointsBits      = uint8(32)
-	SNRNoiseBits             = uint8(32)
-	SpectrumTypeBits         = uint8(32)
-	WindowTypeBits           = uint8(64)
-	SpectrumF1F2IndiciesBits = uint8(64)
-	SpectrumBits             = uint8(64)
-	SectorStepScanCIFBits    = uint8(32)
-	SectorStepScanRecordBits = uint8(128)
-	SectorStepScanBits       = uint8(64) // Variable
-	VersionInformationBits   = uint8(64)
+	polarizationBytes         = uint32(4)
+	pointingVectorBytes       = uint32(4)
+	spatialReferenceTypeBytes = uint32(8)
+	beamWidthBytes            = uint32(4)
+	ebNoBERBytes              = uint32(4)
+	thresholdBytes            = uint32(4)
+	interceptPointsBytes      = uint32(4)
+	sNRNoiseBytes             = uint32(4)
+	spectrumTypeBytes         = uint32(4)
+	windowTypeBytes           = uint32(8)
+	spectrumF1F2IndiciesBytes = uint32(8)
+	spectrumBytes             = uint32(8)
+	sectorStepScanCIFBytes    = uint32(4)
+	sectorStepScanRecordBytes = uint32(16)
+	sectorStepScanBytes       = uint32(8) // Variable
+	versionInformationBytes   = uint32(8)
 )
 
 type Cif1 struct {
@@ -60,8 +60,8 @@ type Polarization struct {
 	EllipticityAngle float64
 }
 
-func (p Polarization) Bits() uint8 {
-	return PolarizationBits
+func (p Polarization) Size() uint32 {
+	return polarizationBytes
 }
 
 func (p *Polarization) Pack() []byte {
@@ -86,8 +86,8 @@ type PointingVector struct {
 	Azimuthal float64
 }
 
-func (p PointingVector) Bits() uint8 {
-	return PointingVectorBits
+func (p PointingVector) Size() uint32 {
+	return pointingVectorBytes
 }
 
 func (p *PointingVector) Pack() []byte {
@@ -112,8 +112,8 @@ type SpatialReferenceType struct {
 	BeamType          uint8 // Type of antenna scan pattern being used
 }
 
-func (s SpatialReferenceType) Bits() uint8 {
-	return SpatialReferenceTypeBits
+func (s SpatialReferenceType) Size() uint32 {
+	return spatialReferenceTypeBytes
 }
 
 func (s *SpatialReferenceType) Pack() []byte {
@@ -143,8 +143,8 @@ type BeamWidth struct {
 	Vertical   float64
 }
 
-func (p BeamWidth) Bits() uint8 {
-	return BeamWidthBits
+func (p BeamWidth) Size() uint32 {
+	return beamWidthBytes
 }
 
 func (p *BeamWidth) Pack() []byte {
@@ -181,8 +181,8 @@ func NewEbNoBer() *EbNoBER {
 	}
 }
 
-func (e EbNoBER) Bits() uint8 {
-	return EbNoBERBits
+func (e EbNoBER) Size() uint32 {
+	return ebNoBERBytes
 }
 
 func (e *EbNoBER) Pack() []byte {
@@ -226,8 +226,8 @@ type Threshold struct {
 	Stage2 float64
 }
 
-func (t Threshold) Bits() uint8 {
-	return ThresholdBits
+func (t Threshold) Size() uint32 {
+	return thresholdBytes
 }
 
 func (t *Threshold) Pack() []byte {
@@ -253,8 +253,8 @@ type InterceptPoints struct {
 	ThirdOrder  float64
 }
 
-func (i InterceptPoints) Bits() uint8 {
-	return InterceptPointsBits
+func (i InterceptPoints) Size() uint32 {
+	return interceptPointsBytes
 }
 
 func (i *InterceptPoints) Pack() []byte {
@@ -279,8 +279,8 @@ type SNRNoise struct {
 	Noise float64
 }
 
-func (s SNRNoise) Bits() uint8 {
-	return SNRNoiseBits
+func (s SNRNoise) Size() uint32 {
+	return sNRNoiseBytes
 }
 
 func (s *SNRNoise) Pack() []byte {
@@ -306,8 +306,8 @@ type SpectrumType struct {
 	WindowTime    uint8
 }
 
-func (s SpectrumType) Bits() uint8 {
-	return SpectrumTypeBits
+func (s SpectrumType) Size() uint32 {
+	return spectrumTypeBytes
 }
 
 func (s *SpectrumType) Pack() []byte {
@@ -336,8 +336,8 @@ type WindowType struct {
 	WindowType uint8
 }
 
-func (w WindowType) Bits() uint8 {
-	return WindowTypeBits
+func (w WindowType) Size() uint32 {
+	return windowTypeBytes
 }
 
 func (w *WindowType) Pack() []byte {
@@ -364,8 +364,8 @@ type SpectrumF1F2Indicies struct {
 	F2Index uint32
 }
 
-func (s SpectrumF1F2Indicies) Bits() uint8 {
-	return SpectrumF1F2IndiciesBits
+func (s SpectrumF1F2Indicies) Size() uint32 {
+	return spectrumF1F2IndiciesBytes
 }
 
 func (s *SpectrumF1F2Indicies) Pack() []byte {
@@ -398,8 +398,8 @@ type Spectrum struct {
 	WindowTimeDelta       uint32
 }
 
-func (s Spectrum) Bits() uint8 {
-	return SpectrumBits
+func (s Spectrum) Size() uint32 {
+	return spectrumBytes
 }
 
 func (s *Spectrum) Pack() []byte {
@@ -502,8 +502,8 @@ type SectorStepScanCIF struct {
 	Time4               bool
 }
 
-func (s SectorStepScanCIF) Bits() uint8 {
-	return SectorStepScanCIFBits
+func (s SectorStepScanCIF) Size() uint32 {
+	return sectorStepScanCIFBytes
 }
 
 func (s *SectorStepScanCIF) Pack() []byte {
@@ -591,12 +591,8 @@ type SectorStepScanRecord struct {
 	Time4               uint32
 }
 
-func (s SectorStepScanRecord) Bits() uint8 {
-	return SectorStepScanRecordBits
-}
-
-func (s SectorStepScanRecord) Size() uint8 {
-	return 80
+func (s SectorStepScanRecord) Size() uint32 {
+	return sectorStepScanRecordBytes
 }
 
 func (s *SectorStepScanRecord) Pack() []byte {
@@ -670,8 +666,8 @@ type SectorStepScan struct {
 	Records        []SectorStepScanRecord
 }
 
-func (s SectorStepScan) Bits() uint8 {
-	return SectorStepScanBits
+func (s SectorStepScan) Size() uint32 {
+	return sectorStepScanBytes
 }
 
 func (s *SectorStepScan) Pack() []byte {
@@ -743,11 +739,11 @@ type IndexList struct {
 	Entries    []uint32
 }
 
-func (s IndexList) Bits() uint8 {
+func (s IndexList) Size() uint32 {
 	if s.NumEntries > 0 {
-		return uint8(32 + 32 + 4*s.NumEntries)
+		return uint32(32+32+4*s.NumEntries) / 8
 	}
-	return uint8(32 + 32) // TotalSize + EntrySize and NumEntries
+	return uint32(8) // TotalSize + EntrySize and NumEntries
 }
 
 func (s *IndexList) Pack() []byte {
@@ -797,8 +793,8 @@ type VersionInformation struct {
 	UserDefined uint16
 }
 
-func (s VersionInformation) Bits() uint8 {
-	return VersionInformationBits
+func (s VersionInformation) Size() uint32 {
+	return versionInformationBytes
 }
 
 func (s *VersionInformation) Pack() []byte {

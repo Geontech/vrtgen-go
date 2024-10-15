@@ -21,8 +21,7 @@ func TestHeaderDefault(t *testing.T) {
 	assert.EqualValues(t, 0, h.PacketCount)
 	assert.EqualValues(t, 0, h.PacketSize)
 	// Pack
-	packed := make([]byte, 4)
-	h.Pack(packed)
+	packed := h.Pack()
 	expected := []byte{0, 0, 0, 0}
 	assert.Equal(t, expected, packed)
 	// Unpack
@@ -80,8 +79,7 @@ func TestHeaderPacketType(t *testing.T) {
 			h.PacketType = tc.packetType
 			assert.Equal(t, tc.packetType, h.PacketType)
 			// Pack
-			packed := make([]byte, 4)
-			h.Pack(packed)
+			packed := h.Pack()
 			expected := []byte{uint8(tc.packetType) << 4, 0, 0, 0}
 			assert.Equal(t, expected, packed)
 			// Unpack
@@ -120,8 +118,7 @@ func TestHeaderTsi(t *testing.T) {
 			h.Tsi = tc.tsi
 			assert.Equal(t, tc.tsi, h.Tsi)
 			// Pack
-			packed := make([]byte, 4)
-			h.Pack(packed)
+			packed := h.Pack()
 			expected := []byte{0, uint8(tc.tsi) << 6, 0, 0}
 			assert.Equal(t, expected, packed)
 			// Unpack
@@ -160,8 +157,7 @@ func TestHeaderTsf(t *testing.T) {
 			h.Tsf = tc.tsf
 			assert.Equal(t, tc.tsf, h.Tsf)
 			// Pack
-			packed := make([]byte, 4)
-			h.Pack(packed)
+			packed := h.Pack()
 			expected := []byte{0, uint8(tc.tsf) << 4, 0, 0}
 			assert.Equal(t, expected, packed)
 			// Unpack
@@ -208,8 +204,7 @@ func TestHeaderPacketCount(t *testing.T) {
 			h.PacketCount = tc.count
 			assert.Equal(t, tc.count, h.PacketCount)
 			// Pack
-			packed := make([]byte, 4)
-			h.Pack(packed)
+			packed := h.Pack()
 			expected := []byte{0, (tc.count % 16), 0, 0}
 			assert.Equal(t, expected, packed)
 			// Unpack
@@ -244,8 +239,7 @@ func TestHeaderPacketSize(t *testing.T) {
 			h.PacketSize = tc.size
 			assert.Equal(t, tc.size, h.PacketSize)
 			// Pack
-			packed := make([]byte, 4)
-			h.Pack(packed)
+			packed := h.Pack()
 			expected := []byte{0, 0, 0, 0}
 			binary.BigEndian.PutUint16(expected[2:], tc.size)
 			assert.Equal(t, expected, packed)

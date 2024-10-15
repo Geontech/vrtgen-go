@@ -5,8 +5,8 @@ import (
 )
 
 const (
-	BeliefBits      = uint8(32)
-	ProbabilityBits = uint8(32)
+	beliefBytes      = uint32(4)
+	probabilityBytes = uint32(4)
 )
 
 type Cif7 struct {
@@ -32,8 +32,8 @@ type Belief struct {
 	BeliefPercent uint32
 }
 
-func (b Belief) Bits() uint8 {
-	return BeliefBits
+func (b Belief) Size() uint32 {
+	return beliefBytes
 }
 
 func (b *Belief) Pack() []byte {
@@ -58,8 +58,8 @@ type Probability struct {
 	ProbabilityPercent  uint32
 }
 
-func (p Probability) Bits() uint8 {
-	return ProbabilityBits
+func (p Probability) Size() uint32 {
+	return probabilityBytes
 }
 
 func (p *Probability) Pack() []byte {

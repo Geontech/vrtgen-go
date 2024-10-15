@@ -6,9 +6,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestPolarizationBits(t *testing.T) {
+func TestPolarizationBytes(t *testing.T) {
 	p := Polarization{}
-	assert.Equal(t, PolarizationBits, p.Bits())
+	assert.Equal(t, polarizationBytes, p.Size())
 }
 
 func TestPolarizationDefault(t *testing.T) {
@@ -109,9 +109,9 @@ func TestPolarization(t *testing.T) {
 	}
 }
 
-func TestPointingVectorBits(t *testing.T) {
+func TestPointingVectorBytes(t *testing.T) {
 	p := PointingVector{}
-	assert.Equal(t, PointingVectorBits, p.Bits())
+	assert.Equal(t, pointingVectorBytes, p.Size())
 }
 
 func TestPointingVectorDefault(t *testing.T) {
@@ -205,9 +205,9 @@ func TestPointingVector(t *testing.T) {
 	}
 }
 
-func TestSpatialReferenceTypeBits(t *testing.T) {
+func TestSpatialReferenceTypeBytes(t *testing.T) {
 	s := SpatialReferenceType{}
-	assert.Equal(t, SpatialReferenceTypeBits, s.Bits())
+	assert.Equal(t, spatialReferenceTypeBytes, s.Size())
 }
 
 func TestSpatialReferenceTypeDefault(t *testing.T) {
@@ -334,9 +334,9 @@ func TestSpatialReferenceType(t *testing.T) {
 	}
 }
 
-func TestBeamWidthBits(t *testing.T) {
+func TestBeamWidthBytes(t *testing.T) {
 	b := BeamWidth{}
-	assert.Equal(t, BeamWidthBits, b.Bits())
+	assert.Equal(t, beamWidthBytes, b.Size())
 }
 
 func TestBeamWidthDefault(t *testing.T) {
@@ -415,9 +415,9 @@ func TestBeamWidth(t *testing.T) {
 	}
 }
 
-func TestEbNoBERBits(t *testing.T) {
+func TestEbNoBERBytes(t *testing.T) {
 	e := EbNoBER{}
-	assert.Equal(t, EbNoBERBits, e.Bits())
+	assert.Equal(t, ebNoBERBytes, e.Size())
 }
 
 func TestEbNoBERDefault(t *testing.T) {
@@ -558,9 +558,9 @@ func TestEbNoBER(t *testing.T) {
 	}
 }
 
-func TestThresholdBits(t *testing.T) {
+func TestThresholdBytes(t *testing.T) {
 	th := Threshold{}
-	assert.Equal(t, ThresholdBits, th.Bits())
+	assert.Equal(t, thresholdBytes, th.Size())
 }
 
 func TestThresholdDefault(t *testing.T) {
@@ -657,9 +657,9 @@ func TestThreshold(t *testing.T) {
 	}
 }
 
-func TestInterceptPointsBits(t *testing.T) {
+func TestInterceptPointsBytes(t *testing.T) {
 	ip := InterceptPoints{}
-	assert.Equal(t, InterceptPointsBits, ip.Bits())
+	assert.Equal(t, interceptPointsBytes, ip.Size())
 }
 
 func TestInterceptPointsDefault(t *testing.T) {
@@ -751,9 +751,9 @@ func TestInterceptPoints(t *testing.T) {
 	}
 }
 
-func TestSNRNoiseBits(t *testing.T) {
+func TestSNRNoiseBytes(t *testing.T) {
 	s := SNRNoise{}
-	assert.Equal(t, SNRNoiseBits, s.Bits())
+	assert.Equal(t, sNRNoiseBytes, s.Size())
 }
 
 func TestSNRNoiseDefault(t *testing.T) {
@@ -874,9 +874,9 @@ func TestSNRNoise(t *testing.T) {
 	}
 }
 
-func TestSpectrumTypeBits(t *testing.T) {
+func TestSpectrumTypeBytes(t *testing.T) {
 	s := SpectrumType{}
-	assert.Equal(t, SpectrumTypeBits, s.Bits())
+	assert.Equal(t, spectrumTypeBytes, s.Size())
 }
 
 func TestSpectrumTypeDefault(t *testing.T) {
@@ -1047,9 +1047,9 @@ func TestSpectrumType(t *testing.T) {
 	}
 }
 
-func TestWindowTypeBits(t *testing.T) {
+func TestWindowTypeBytes(t *testing.T) {
 	ip := WindowType{}
-	assert.Equal(t, WindowTypeBits, ip.Bits())
+	assert.Equal(t, windowTypeBytes, ip.Size())
 }
 
 func TestWindowTypeDefault(t *testing.T) {
@@ -1111,9 +1111,9 @@ func TestWindowType(t *testing.T) {
 	}
 }
 
-func TestSpectrumF1F2IndiciesBits(t *testing.T) {
+func TestSpectrumF1F2IndiciesBytes(t *testing.T) {
 	s := SpectrumF1F2Indicies{}
-	assert.Equal(t, SpectrumF1F2IndiciesBits, s.Bits())
+	assert.Equal(t, spectrumF1F2IndiciesBytes, s.Size())
 }
 
 func TestSpectrumF1F2IndiciesDefault(t *testing.T) {
@@ -1186,9 +1186,9 @@ func TestSpectrumF1F2Indicies(t *testing.T) {
 	}
 }
 
-func TestSpectrumBits(t *testing.T) {
+func TestSpectrumBytes(t *testing.T) {
 	s := Spectrum{}
-	assert.Equal(t, SpectrumBits, s.Bits())
+	assert.Equal(t, spectrumBytes, s.Size())
 }
 
 func TestSpectrumDefault(t *testing.T) {
@@ -1321,13 +1321,13 @@ func TestSpectrum(t *testing.T) {
 	}
 }
 
-func TestIndexListBits(t *testing.T) {
+func TestIndexListBytes(t *testing.T) {
 	s := IndexList{}
-	expectedBits := uint8(32 + 32)
+	expectedBytes := uint32(8)
 	if s.NumEntries != 0 {
-		expectedBits += uint8(4 * s.NumEntries)
+		expectedBytes += uint32(4*s.NumEntries) / 8
 	}
-	assert.Equal(t, expectedBits, s.Bits())
+	assert.Equal(t, expectedBytes, s.Size())
 }
 
 func TestIndexListDefault(t *testing.T) {
@@ -1393,9 +1393,9 @@ func TestIndexList(t *testing.T) {
 	}
 }
 
-func TestSectorStepScanCIFBits(t *testing.T) {
+func TestSectorStepScanCIFBytes(t *testing.T) {
 	s := SectorStepScanCIF{}
-	assert.Equal(t, SectorStepScanCIFBits, s.Bits())
+	assert.Equal(t, sectorStepScanCIFBytes, s.Size())
 }
 
 func TestSectorStepScanCIFDefault(t *testing.T) {
@@ -1534,9 +1534,9 @@ func TestSectorStepScanCIF(t *testing.T) {
 	}
 }
 
-func TestSectorStepScanRecordBits(t *testing.T) {
+func TestSectorStepScanRecordBytes(t *testing.T) {
 	s := SectorStepScanRecord{}
-	assert.Equal(t, SectorStepScanRecordBits, s.Bits())
+	assert.Equal(t, sectorStepScanRecordBytes, s.Size())
 }
 
 // func TestSectorStepScanRecordDefault(t *testing.T) {
@@ -1665,9 +1665,9 @@ func TestSectorStepScanRecordBits(t *testing.T) {
 // 	}
 // }
 
-// func TestSectorStepScanBits(t *testing.T) {
+// func TestSectorStepScanBytes(t *testing.T) {
 // 	s := SectorStepScan{}
-// 	assert.Equal(t, SectorStepScanBits, s.Bits())
+// 	assert.Equal(t, sectorStepScanBytes, s.Size())
 // }
 
 // func TestSectorStepScanDefault(t *testing.T) {
@@ -1777,9 +1777,9 @@ func TestSectorStepScanRecordBits(t *testing.T) {
 // 	}
 // }
 
-func TestVersionInformationBits(t *testing.T) {
+func TestVersionInformationBytes(t *testing.T) {
 	s := VersionInformation{}
-	assert.Equal(t, VersionInformationBits, s.Bits())
+	assert.Equal(t, versionInformationBytes, s.Size())
 }
 
 func TestVersionInformationDefault(t *testing.T) {
