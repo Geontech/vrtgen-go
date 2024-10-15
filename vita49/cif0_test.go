@@ -206,8 +206,7 @@ func TestEphemerisDefault(t *testing.T) {
 	assert.Equal(t, FromFixed(int32(0x7FFFFFFF), 16), e.VelocityDy)
 	assert.Equal(t, FromFixed(int32(0x7FFFFFFF), 16), e.VelocityDz)
 	// Pack
-	packed := bytes.Repeat([]byte{0xFF}, 52)
-	e.Pack(packed)
+	packed := e.Pack()
 
 	word1 := make([]byte, 4)
 	tsBytes := bytes.Repeat([]byte{0xFF}, 12)
@@ -379,8 +378,7 @@ func TestEphemeris(t *testing.T) {
 			assert.Equal(t, tc.velocitydz, e.VelocityDz)
 
 			// Pack
-			packed := bytes.Repeat([]byte{0xFF}, 52)
-			e.Pack(packed)
+			packed := e.Pack()
 			testSlice := make([]byte, 52)
 			copy(testSlice[tc.offset:], tc.expected)
 			assert.Equal(t, testSlice, packed)
@@ -428,8 +426,7 @@ func TestGeolocationDefault(t *testing.T) {
 	assert.Equal(t, FromFixed(int32(0x7FFFFFFF), 22), g.TrackAngle)
 	assert.Equal(t, FromFixed(int32(0x7FFFFFFF), 22), g.MagneticVariation)
 	// Pack
-	packed := bytes.Repeat([]byte{0xFF}, 44)
-	g.Pack(packed)
+	packed := g.Pack()
 	word1 := make([]byte, 4)
 	tsBytes := bytes.Repeat([]byte{0xFF}, 12)
 	fields := make([]byte, 4)
@@ -572,8 +569,7 @@ func TestGeolocation(t *testing.T) {
 			assert.Equal(t, tc.trackangle, g.TrackAngle)
 			assert.Equal(t, tc.magneticvariation, g.MagneticVariation)
 			// Pack
-			packed := bytes.Repeat([]byte{0xFF}, 44)
-			g.Pack(packed)
+			packed := g.Pack()
 			testSlice := make([]byte, 44)
 			copy(testSlice[tc.offset:], tc.expected)
 			assert.Equal(t, testSlice, packed)
@@ -610,8 +606,7 @@ func TestGpsAsciiDefault(t *testing.T) {
 	assert.Equal(t, []uint8{}, g.AsciiSentences)
 
 	// Pack
-	packed := bytes.Repeat([]byte{0xFF}, 8)
-	g.Pack(packed)
+	packed := g.Pack()
 	expected := make([]byte, 8)
 	assert.Equal(t, expected, packed)
 	// Unpack
@@ -663,8 +658,7 @@ func TestGpsAscii(t *testing.T) {
 			assert.Equal(t, tc.numberofwords, g.NumberOfWords)
 			assert.Equal(t, tc.asciisentences, g.AsciiSentences)
 			// Pack
-			packed := bytes.Repeat([]byte{0xFF}, int((g.NumberOfWords+2)*4))
-			g.Pack(packed)
+			packed := g.Pack()
 			testSlice := make([]byte, int((g.NumberOfWords+2)*4))
 			copy(testSlice[tc.offset:], tc.expected)
 			assert.Equal(t, testSlice, packed)
@@ -700,8 +694,7 @@ func TestPayloadFormatDefault(t *testing.T) {
 	assert.Equal(t, uint32(1), p.VectorSize)
 
 	// Pack
-	packed := []byte{0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}
-	p.Pack(packed)
+	packed := p.Pack()
 	expected := []byte{0, 0, 0, 0, 0, 0, 0, 0}
 	assert.Equal(t, expected, packed)
 	// Unpack
@@ -828,8 +821,7 @@ func TestPayloadFormat(t *testing.T) {
 			assert.Equal(t, tc.repeatcount, p.RepeatCount)
 			assert.Equal(t, tc.vectorsize, p.VectorSize)
 			// Pack
-			packed := []byte{0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF}
-			p.Pack(packed)
+			packed := p.Pack()
 			assert.Equal(t, tc.expected, packed)
 			// Unpack
 			p.Unpack(packed)
@@ -890,8 +882,7 @@ func TestContextAssociationListsDefault(t *testing.T) {
 	assert.Equal(t, []uint32{}, c.AsyncTagList)
 
 	// Pack
-	packed := bytes.Repeat([]byte{0xFF}, 8)
-	c.Pack(packed)
+	packed := c.Pack()
 	expected := make([]byte, 8)
 	assert.Equal(t, expected, packed)
 	// Unpack
@@ -1094,8 +1085,7 @@ func TestContextAssociationLists(t *testing.T) {
 				totalSize += int(tc.asyncListSize * 4)
 			}
 
-			packed := bytes.Repeat([]byte{0xFF}, totalSize)
-			c.Pack(packed)
+			packed := c.Pack()
 			assert.Equal(t, tc.expected, packed)
 
 			// Unpack

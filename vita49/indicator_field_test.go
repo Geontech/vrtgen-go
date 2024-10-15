@@ -9,8 +9,7 @@ import (
 
 func packAndUnpack(t *testing.T, i *IndicatorField0, v uint32, b uint8) {
 	// Pack
-	packed := []byte{0xFF, 0xFF, 0xFF, 0xFF}
-	i.Pack(packed)
+	packed := i.Pack()
 	expected := []byte{0, 0, 0, 0}
 	binary.BigEndian.PutUint32(expected, v<<b)
 	assert.Equal(t, expected, packed)

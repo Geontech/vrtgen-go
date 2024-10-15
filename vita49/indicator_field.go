@@ -38,6 +38,10 @@ type IndicatorField0 struct {
 	EphemerisRefId           bool // bit position 10
 	GpsAscii                 bool // bit position 9
 	ContextAssociationLists  bool // bit position 8
+	If7Enable                bool // bit position 7
+	If3Enable                bool // bit position 3
+	If2Enable                bool // bit position 2
+	If1Enable                bool // bit position 1
 }
 
 type IndicatorField1 struct {
@@ -103,6 +107,10 @@ type IndicatorField2 struct {
 	RfFootprintRange        bool // bit position 3
 }
 
+func (f IndicatorField2) Size() uint32 {
+	return 4
+}
+
 type IndicatorField3 struct {
 	IndicatorField
 	TimestampDetails     bool // bit position 31
@@ -155,7 +163,12 @@ func indicatorFieldBool(v uint32, b uint32) bool {
 	return (v & (uint32(1) << b)) != 0
 }
 
-func (f *IndicatorField0) Pack(buf []byte) {
+func (f IndicatorField0) Size() uint32 {
+	return 4
+}
+
+func (f *IndicatorField0) Pack() []byte {
+	buf := make([]byte, f.Size())
 	var bitmap uint32
 	bitmap |= indicatorFieldUint(f.ChangeIndicator, 31)
 	bitmap |= indicatorFieldUint(f.ReferencePointId, 30)
@@ -181,7 +194,12 @@ func (f *IndicatorField0) Pack(buf []byte) {
 	bitmap |= indicatorFieldUint(f.EphemerisRefId, 10)
 	bitmap |= indicatorFieldUint(f.GpsAscii, 9)
 	bitmap |= indicatorFieldUint(f.ContextAssociationLists, 8)
+	bitmap |= indicatorFieldUint(f.If7Enable, 7)
+	bitmap |= indicatorFieldUint(f.If3Enable, 3)
+	bitmap |= indicatorFieldUint(f.If2Enable, 2)
+	bitmap |= indicatorFieldUint(f.If1Enable, 1)
 	binary.BigEndian.PutUint32(buf, bitmap)
+	return buf
 }
 
 func (f *IndicatorField0) Unpack(buf []byte) {
@@ -210,9 +228,18 @@ func (f *IndicatorField0) Unpack(buf []byte) {
 	f.EphemerisRefId = indicatorFieldBool(bitmap, 10)
 	f.GpsAscii = indicatorFieldBool(bitmap, 9)
 	f.ContextAssociationLists = indicatorFieldBool(bitmap, 8)
+	f.If7Enable = indicatorFieldBool(bitmap, 7)
+	f.If3Enable = indicatorFieldBool(bitmap, 3)
+	f.If2Enable = indicatorFieldBool(bitmap, 2)
+	f.If1Enable = indicatorFieldBool(bitmap, 1)
 }
 
-func (f *IndicatorField1) Pack(buf []byte) {
+func (f IndicatorField1) Size() uint32 {
+	return 4
+}
+
+func (f *IndicatorField1) Pack() []byte {
+	buf := make([]byte, f.Size())
 	var bitmap uint32
 	bitmap |= indicatorFieldUint(f.PhaseOffset, 31)
 	bitmap |= indicatorFieldUint(f.Polarization, 30)
@@ -241,6 +268,7 @@ func (f *IndicatorField1) Pack(buf []byte) {
 	bitmap |= indicatorFieldUint(f.VersionInformation, 2)
 	bitmap |= indicatorFieldUint(f.BufferSize, 1)
 	binary.BigEndian.PutUint32(buf, bitmap)
+	return buf
 }
 
 func (f *IndicatorField1) Unpack(buf []byte) {

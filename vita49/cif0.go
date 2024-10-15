@@ -104,7 +104,8 @@ func NewEphemeris() Ephemeris {
 	}
 }
 
-func (e *Ephemeris) Pack(buf []byte) {
+func (e *Ephemeris) Pack() []byte {
+	buf := make([]byte, e.Size())
 	word1 := uint32(0)
 	word1 |= uint32((e.Tsi & 3)) << 26
 	word1 |= uint32((e.Tsf & 3)) << 24
@@ -121,6 +122,7 @@ func (e *Ephemeris) Pack(buf []byte) {
 	binary.BigEndian.PutUint32(buf[40:], uint32(ToFixed32(e.VelocityDx, 16)))
 	binary.BigEndian.PutUint32(buf[44:], uint32(ToFixed32(e.VelocityDy, 16)))
 	binary.BigEndian.PutUint32(buf[48:], uint32(ToFixed32(e.VelocityDz, 16)))
+	return buf
 }
 
 func (e *Ephemeris) Unpack(buf []byte) {
@@ -178,7 +180,8 @@ func NewGeolocation() Geolocation {
 	}
 }
 
-func (g *Geolocation) Pack(buf []byte) {
+func (g *Geolocation) Pack() []byte {
+	buf := make([]byte, g.Size())
 	word1 := uint32(0)
 	word1 |= uint32((g.Tsi & 3)) << 26
 	word1 |= uint32((g.Tsf & 3)) << 24
@@ -194,7 +197,7 @@ func (g *Geolocation) Pack(buf []byte) {
 	binary.BigEndian.PutUint32(buf[32:], uint32(ToFixed32(g.HeadingAngle, 22)))
 	binary.BigEndian.PutUint32(buf[36:], uint32(ToFixed32(g.TrackAngle, 22)))
 	binary.BigEndian.PutUint32(buf[40:], uint32(ToFixed32(g.MagneticVariation, 22)))
-
+	return buf
 }
 
 func (g *Geolocation) Unpack(buf []byte) {
@@ -232,7 +235,8 @@ func NewGpsAscii() GpsAscii {
 		AsciiSentences:  []uint8{},
 	}
 }
-func (g *GpsAscii) Pack(buf []byte) {
+func (g *GpsAscii) Pack() []byte {
+	buf := make([]byte, g.Size())
 	binary.BigEndian.PutUint32(buf[0:], g.ManufacturerOui)
 	buf[0] = 0x00
 	binary.BigEndian.PutUint32(buf[4:], g.NumberOfWords)
@@ -240,6 +244,7 @@ func (g *GpsAscii) Pack(buf []byte) {
 	// Add padding when number of ascii bytes not divis by 4
 	padding := 4*g.NumberOfWords - uint32(len(g.AsciiSentences))
 	copy(buf[8+len(g.AsciiSentences):], make([]byte, padding))
+	return buf
 }
 
 func (g *GpsAscii) Unpack(buf []byte) {
@@ -271,24 +276,20 @@ func NewPayloadFormat() PayloadFormat {
 		VectorSize:           1,
 	}
 }
-
 func (p PayloadFormat) Size() uint32 {
 	return payloadFormatBytes
 }
-func (p *PayloadFormat) Pack(buf []byte) {
+func (p *PayloadFormat) Pack() []byte {
+	buf := make([]byte, p.Size())
 	word1 := uint32(0)
-	packing := uint8(0)
-	repeatindicator := uint8(0)
 	if p.PackingMethod {
-		packing = 1
+		word1 |= uint32(1) << 31
 	}
-	if p.RepeatIndicator {
-		repeatindicator = 1
-	}
-	word1 |= uint32((packing & 1)) << 31
 	word1 |= uint32((p.RealComplexType & 3)) << 29
 	word1 |= uint32((p.DataItemFormat & 31)) << 24
-	word1 |= uint32((repeatindicator & 1)) << 23
+	if p.RepeatIndicator {
+		word1 |= uint32(1) << 23
+	}
 	word1 |= uint32((p.EventTagSize & 7)) << 20
 	word1 |= uint32((p.ChannelTagSize & 15)) << 16
 	word1 |= uint32((p.DataItemFractionSize & 15)) << 12
@@ -315,7 +316,7 @@ func (p *PayloadFormat) Pack(buf []byte) {
 	} else {
 		binary.BigEndian.PutUint16(buf[6:], 0)
 	}
-
+	return buf
 }
 
 func (p *PayloadFormat) Unpack(buf []byte) {
@@ -382,8 +383,8 @@ func (c *ContextAssociationLists) Size() uint32 {
 		uint32(c.AsyncListSize*asyncTag))
 }
 
-func NewContextAssociationLists() ContextAssociationLists {
-	return ContextAssociationLists{
+func NewContextAssociationLists() *ContextAssociationLists {
+	return &ContextAssociationLists{
 		SourceList:   []uint32{},
 		SystemList:   []uint32{},
 		VectorList:   []uint32{},
@@ -392,7 +393,8 @@ func NewContextAssociationLists() ContextAssociationLists {
 	}
 }
 
-func (c *ContextAssociationLists) Pack(buf []byte) {
+func (c *ContextAssociationLists) Pack() []byte {
+	buf := make([]byte, c.Size())
 	asyncTag := uint16(0)
 	offset := uint16(0)
 
@@ -418,7 +420,8 @@ func (c *ContextAssociationLists) Pack(buf []byte) {
 	offset += c.VectorListSize * 4
 	copy(buf[offset:], uint32ToBytes(c.AsyncList))
 	offset += c.AsyncListSize * 4
-	copy(buf[offset:offset+(c.AsyncListSize*asyncTag)], uint32ToBytes(c.AsyncTagList))
+	copy(buf[offset:], uint32ToBytes(c.AsyncTagList))
+	return buf
 }
 
 func (c *ContextAssociationLists) Unpack(buf []byte) {

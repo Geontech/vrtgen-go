@@ -6,9 +6,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestBeliefBits(t *testing.T) {
+func TestBeliefBytes(t *testing.T) {
 	p := Belief{}
-	assert.Equal(t, BeliefBits, p.Bits())
+	assert.Equal(t, beliefBytes, p.Size())
 }
 
 func TestBeliefDefault(t *testing.T) {
@@ -59,9 +59,9 @@ func TestBelief(t *testing.T) {
 	}
 }
 
-func TestProbabilityBits(t *testing.T) {
+func TestProbabilityBytes(t *testing.T) {
 	p := Probability{}
-	assert.Equal(t, BeliefBits, p.Bits())
+	assert.Equal(t, beliefBytes, p.Size())
 }
 
 func TestProbabilityDefault(t *testing.T) {

@@ -52,7 +52,8 @@ func (h Header) Size() uint32 {
 	return headerBytes
 }
 
-func (h *Header) Pack(buf []byte) {
+func (h *Header) Pack() []byte {
+	buf := make([]byte, h.Size())
 	var classIdEnableVal uint8
 	if h.ClassIdEnable {
 		classIdEnableVal = 1
@@ -60,6 +61,7 @@ func (h *Header) Pack(buf []byte) {
 	buf[0] = (uint8(h.PacketType) << 4) | (classIdEnableVal << 3)
 	buf[1] = (uint8(h.Tsi) << 6) | (uint8(h.Tsf) << 4) | (h.PacketCount % 16)
 	binary.BigEndian.PutUint16(buf[2:], uint16(h.PacketSize))
+	return buf
 }
 
 func (h *Header) Unpack(buf []byte) {
@@ -78,8 +80,8 @@ type DataHeader struct {
 	Spectrum        bool
 }
 
-func (h *DataHeader) Pack(buf []byte) {
-	h.Header.Pack(buf)
+func (h *DataHeader) Pack() []byte {
+	buf := h.Header.Pack()
 	if h.TrailerIncluded {
 		buf[0] |= (uint8(1) << 2)
 	}
@@ -89,6 +91,7 @@ func (h *DataHeader) Pack(buf []byte) {
 	if h.Spectrum {
 		buf[0] |= uint8(1)
 	}
+	return buf
 }
 
 func (h *DataHeader) Unpack(buf []byte) {
@@ -111,12 +114,13 @@ type ContextHeader struct {
 	Tsm     Tsm
 }
 
-func (h *ContextHeader) Pack(buf []byte) {
-	h.Header.Pack(buf)
+func (h *ContextHeader) Pack() []byte {
+	buf := h.Header.Pack()
 	if h.NotV490 {
 		buf[0] |= (uint8(1) << 1)
 	}
 	buf[0] |= uint8(h.Tsm)
+	return buf
 }
 
 func (h *ContextHeader) Unpack(buf []byte) {
@@ -131,14 +135,15 @@ type CommandHeader struct {
 	Cancellation bool
 }
 
-func (h *CommandHeader) Pack(buf []byte) {
-	h.Header.Pack(buf)
+func (h *CommandHeader) Pack() []byte {
+	buf := h.Header.Pack()
 	if h.Acknowledge {
 		buf[0] |= (uint8(1) << 2)
 	}
 	if h.Cancellation {
 		buf[0] |= uint8(1)
 	}
+	return buf
 }
 
 func (h *CommandHeader) Unpack(buf []byte) {
