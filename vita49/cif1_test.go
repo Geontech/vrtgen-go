@@ -753,7 +753,7 @@ func TestInterceptPoints(t *testing.T) {
 
 func TestSNRNoiseBytes(t *testing.T) {
 	s := SNRNoise{}
-	assert.Equal(t, sNRNoiseBytes, s.Size())
+	assert.Equal(t, snrNoiseBytes, s.Size())
 }
 
 func TestSNRNoiseDefault(t *testing.T) {

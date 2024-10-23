@@ -8,16 +8,16 @@ import (
 const (
 	polarizationBytes         = uint32(4)
 	pointingVectorBytes       = uint32(4)
-	spatialReferenceTypeBytes = uint32(8)
+	spatialReferenceTypeBytes = uint32(4)
 	beamWidthBytes            = uint32(4)
 	ebNoBERBytes              = uint32(4)
 	thresholdBytes            = uint32(4)
 	interceptPointsBytes      = uint32(4)
-	sNRNoiseBytes             = uint32(4)
+	snrNoiseBytes             = uint32(4)
 	spectrumTypeBytes         = uint32(4)
-	windowTypeBytes           = uint32(8)
+	windowTypeBytes           = uint32(4)
 	spectrumF1F2IndiciesBytes = uint32(8)
-	spectrumBytes             = uint32(8)
+	spectrumBytes             = uint32(52)
 	sectorStepScanCIFBytes    = uint32(4)
 	sectorStepScanRecordBytes = uint32(16)
 	sectorStepScanBytes       = uint32(8) // Variable
@@ -26,31 +26,6 @@ const (
 
 type Cif1 struct {
 	IndicatorField1
-	PhaseOffset          uint32
-	Polarization         Polarization
-	PointingVector       PointingVector
-	SpatialScanType      uint32
-	SpatialReferenceType SpatialReferenceType
-	BeamWidth            BeamWidth
-	Range                uint32
-	EbNoBER              EbNoBER
-	Threshold            Threshold
-	CompressionPoint     uint32
-	InterceptPoints      InterceptPoints
-	SNRNoise             SNRNoise
-	AuxFrequency         uint32
-	AuxGain              Gain
-	AuxBandwith          uint32
-	ArrayOfCifs          uint32
-	Spectrum             Spectrum
-	SectorStepScan       SectorStepScan
-	IndexList            IndexList
-	DiscreteIo32         uint32
-	DiscreteIo64         uint64
-	HealthStatus         uint32
-	V49SpecCompliance    uint32
-	VersionInformation   VersionInformation
-	BufferSize           uint32
 }
 
 // Polarization
@@ -60,17 +35,14 @@ type Polarization struct {
 	EllipticityAngle float64
 }
 
-func (p Polarization) Size() uint32 {
+func (p *Polarization) Size() uint32 {
 	return polarizationBytes
 }
 
 func (p *Polarization) Pack() []byte {
-	// 1 word
-	retval := make([]byte, 4)
-
+	retval := make([]byte, p.Size())
 	binary.BigEndian.PutUint16(retval[2:], uint16(ToFixed16(p.EllipticityAngle, 13)))
 	binary.BigEndian.PutUint16(retval[0:], uint16(ToFixed16(p.TiltAngle, 13)))
-
 	return retval
 }
 
@@ -86,14 +58,12 @@ type PointingVector struct {
 	Azimuthal float64
 }
 
-func (p PointingVector) Size() uint32 {
+func (p *PointingVector) Size() uint32 {
 	return pointingVectorBytes
 }
 
 func (p *PointingVector) Pack() []byte {
-	// 1 word
-	retval := make([]byte, 4)
-
+	retval := make([]byte, p.Size())
 	binary.BigEndian.PutUint16(retval[2:], uint16(ToFixed16(p.Azimuthal, 7)))
 	binary.BigEndian.PutUint16(retval[0:], uint16(ToFixed16(p.Elevation, 7)))
 	return retval
@@ -112,20 +82,17 @@ type SpatialReferenceType struct {
 	BeamType          uint8 // Type of antenna scan pattern being used
 }
 
-func (s SpatialReferenceType) Size() uint32 {
+func (s *SpatialReferenceType) Size() uint32 {
 	return spatialReferenceTypeBytes
 }
 
 func (s *SpatialReferenceType) Pack() []byte {
-	// 1 word
-	retval := make([]byte, 4)
-
+	retval := make([]byte, s.Size())
 	word1 := uint32(0)
 	word1 |= uint32(s.SpatialIdentifier) << 16    // Bits 16-31
 	word1 |= uint32(s.DefinedReference&0x03) << 2 // Bits 2 & 3
 	word1 |= uint32(s.BeamType & 0x03)            // Bits 0 & 1
 	binary.BigEndian.PutUint32(retval[0:], word1)
-
 	return retval
 }
 
@@ -143,23 +110,20 @@ type BeamWidth struct {
 	Vertical   float64
 }
 
-func (p BeamWidth) Size() uint32 {
+func (b *BeamWidth) Size() uint32 {
 	return beamWidthBytes
 }
 
-func (p *BeamWidth) Pack() []byte {
-	// 1 word
-	retval := make([]byte, 4)
-
-	binary.BigEndian.PutUint16(retval[2:], uint16(ToFixed16(p.Vertical, 7)))
-	binary.BigEndian.PutUint16(retval[0:], uint16(ToFixed16(p.Horizontal, 7)))
-
+func (b *BeamWidth) Pack() []byte {
+	retval := make([]byte, b.Size())
+	binary.BigEndian.PutUint16(retval[2:], uint16(ToFixed16(b.Vertical, 7)))
+	binary.BigEndian.PutUint16(retval[0:], uint16(ToFixed16(b.Horizontal, 7)))
 	return retval
 }
 
-func (p *BeamWidth) Unpack(buf []byte) {
-	p.Vertical = FromFixed(int16(binary.BigEndian.Uint16(buf[2:])), 7)
-	p.Horizontal = FromFixed(int16(binary.BigEndian.Uint16(buf[0:])), 7)
+func (b *BeamWidth) Unpack(buf []byte) {
+	b.Vertical = FromFixed(int16(binary.BigEndian.Uint16(buf[2:])), 7)
+	b.Horizontal = FromFixed(int16(binary.BigEndian.Uint16(buf[0:])), 7)
 }
 
 // EbNoBER
@@ -176,46 +140,25 @@ type EbNoBER struct {
 // Constructor for EbNoBer
 func NewEbNoBer() *EbNoBER {
 	return &EbNoBER{
-		Ebno: 32767, // Default to 'not used' 0x7FFF
-		Ber:  32767, // Default to 'not used' 0x7FFF
+		Ebno: 0x7FFF, // Default to 'not used'
+		Ber:  0x7FFF, // Default to 'not used'
 	}
 }
 
-func (e EbNoBER) Size() uint32 {
+func (e *EbNoBER) Size() uint32 {
 	return ebNoBERBytes
 }
 
 func (e *EbNoBER) Pack() []byte {
-	// 1 word
-	retval := make([]byte, 4)
-
-	// ebnoFixed := uint16(ToFixed16(e.Ebno, 7))
-	// berFixed := uint16(ToFixed16(e.Ber, 7))
-
-	// // Create a 32-bit word with ebno in bits 16-31 and ber in bits 0-15
-	// word := uint32(ebnoFixed)<<16 | uint32(berFixed)
-	// binary.BigEndian.PutUint32(retval, word)
-
-	binary.BigEndian.PutUint16(retval[2:], uint16(ToFixed16(e.Ber, 7)))
+	retval := make([]byte, e.Size())
 	binary.BigEndian.PutUint16(retval[0:], uint16(ToFixed16(e.Ebno, 7)))
-
+	binary.BigEndian.PutUint16(retval[2:], uint16(ToFixed16(e.Ber, 7)))
 	return retval
 }
 
 func (e *EbNoBER) Unpack(buf []byte) {
-
-	// Read the 32-bit word from the byte array in big-endian order
-	word := binary.BigEndian.Uint32(buf)
-
-	// Extract ebno from bits 16-31
-	e.Ebno = FromFixed(int16(word>>16), 7) // Shift right by 16 bits
-
-	// Extract ber from bits 0-15
-	e.Ber = FromFixed(int16(word&0xFFFF), 7) // Mask with 0xFFFF to get lower 16 bits
-
-	// e.ber = FromFixed(int16(binary.BigEndian.Uint16(retval[2:])), 7)
-	// e.ebno = FromFixed(int16(binary.BigEndian.Uint16(retval[0:])), 7)
-
+	e.Ebno = FromFixed(int16(binary.BigEndian.Uint16(buf[0:])), 7)
+	e.Ber = FromFixed(int16(binary.BigEndian.Uint16(buf[2:])), 7)
 }
 
 // Threshold
@@ -226,17 +169,14 @@ type Threshold struct {
 	Stage2 float64
 }
 
-func (t Threshold) Size() uint32 {
+func (t *Threshold) Size() uint32 {
 	return thresholdBytes
 }
 
 func (t *Threshold) Pack() []byte {
-	// 1 word
-	retval := make([]byte, 4)
-
+	retval := make([]byte, t.Size())
 	binary.BigEndian.PutUint16(retval[2:], uint16(ToFixed16(t.Stage2, 7)))
 	binary.BigEndian.PutUint16(retval[0:], uint16(ToFixed16(t.Stage1, 7)))
-
 	return retval
 }
 
@@ -258,12 +198,9 @@ func (i InterceptPoints) Size() uint32 {
 }
 
 func (i *InterceptPoints) Pack() []byte {
-	// 1 word
 	retval := make([]byte, 4)
-
 	binary.BigEndian.PutUint16(retval[2:], uint16(ToFixed16(i.ThirdOrder, 7)))
 	binary.BigEndian.PutUint16(retval[0:], uint16(ToFixed16(i.SecondOrder, 7)))
-
 	return retval
 }
 
@@ -279,17 +216,14 @@ type SNRNoise struct {
 	Noise float64
 }
 
-func (s SNRNoise) Size() uint32 {
-	return sNRNoiseBytes
+func (s *SNRNoise) Size() uint32 {
+	return snrNoiseBytes
 }
 
 func (s *SNRNoise) Pack() []byte {
-	// 1 word
-	retval := make([]byte, 4)
-
+	retval := make([]byte, s.Size())
 	binary.BigEndian.PutUint16(retval[2:], uint16(ToFixed16(s.Noise, 7)))
 	binary.BigEndian.PutUint16(retval[0:], uint16(ToFixed16(s.Snr, 7)))
-
 	return retval
 }
 
@@ -306,19 +240,17 @@ type SpectrumType struct {
 	WindowTime    uint8
 }
 
-func (s SpectrumType) Size() uint32 {
+func (s *SpectrumType) Size() uint32 {
 	return spectrumTypeBytes
 }
 
 func (s *SpectrumType) Pack() []byte {
-	retval := make([]byte, 4)
-
+	retval := make([]byte, s.Size())
 	word1 := uint32(0)
 	word1 |= uint32(s.WindowTime&0x0F) << 16
 	word1 |= uint32(s.AveragingType&0xFF) << 8
 	word1 |= uint32(s.SpectrumType & 0xFF)
 	binary.BigEndian.PutUint32(retval[0:], word1)
-
 	return retval
 }
 
@@ -336,18 +268,15 @@ type WindowType struct {
 	WindowType uint8
 }
 
-func (w WindowType) Size() uint32 {
+func (w *WindowType) Size() uint32 {
 	return windowTypeBytes
 }
 
 func (w *WindowType) Pack() []byte {
-	// 1 word
-	retval := make([]byte, 4)
-
+	retval := make([]byte, w.Size())
 	word1 := uint32(0)
 	word1 |= uint32(w.WindowType) // Byte 3
 	binary.BigEndian.PutUint32(retval[0:], word1)
-
 	return retval
 }
 
@@ -364,17 +293,14 @@ type SpectrumF1F2Indicies struct {
 	F2Index uint32
 }
 
-func (s SpectrumF1F2Indicies) Size() uint32 {
+func (s *SpectrumF1F2Indicies) Size() uint32 {
 	return spectrumF1F2IndiciesBytes
 }
 
 func (s *SpectrumF1F2Indicies) Pack() []byte {
-	// 2 words
-	retval := make([]byte, 2*4)
-
+	retval := make([]byte, s.Size())
 	binary.BigEndian.PutUint32(retval[4:], s.F1Index)
 	binary.BigEndian.PutUint32(retval[0:], s.F2Index)
-
 	return retval
 }
 
@@ -398,13 +324,12 @@ type Spectrum struct {
 	WindowTimeDelta       uint32
 }
 
-func (s Spectrum) Size() uint32 {
+func (s *Spectrum) Size() uint32 {
 	return spectrumBytes
 }
 
 func (s *Spectrum) Pack() []byte {
-	// 13 words total == 52 bytes
-	retval := make([]byte, 13*4)
+	retval := make([]byte, s.Size())
 
 	// Spectrum type - 4 bytes
 	spectrumWord := uint32(0)

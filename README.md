@@ -1,16 +1,6 @@
 # vrtgen-go
 
-## Getting started
 
-```bash
-go get github.com/geontech/vrtgen-go
+## Description
 
-vrtgen-go help
-```
-
-
-## Build
-
-```bash
-go build
-```
+This repository contains a Go backend library containing classes designed for constructing VITA 49.2 packets.

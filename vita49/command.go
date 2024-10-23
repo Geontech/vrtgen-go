@@ -80,8 +80,7 @@ func (c ControlCAM) Size() uint32 {
 }
 
 func (c *ControlCAM) Pack() []byte {
-	buf := make([]byte, c.Size())
-	buf = c.CAM.Pack()
+	buf := c.CAM.Pack()
 	var bitmap uint32
 	bitmap |= indicatorFieldUint(c.ReqV, 20)
 	bitmap |= indicatorFieldUint(c.ReqX, 19)
@@ -118,8 +117,7 @@ func (a AcknowledgeCAM) Size() uint32 {
 }
 
 func (a *AcknowledgeCAM) Pack() []byte {
-	buf := make([]byte, a.Size())
-	buf = a.CAM.Pack()
+	buf := a.CAM.Pack()
 	var bitmap uint32
 	bitmap |= indicatorFieldUint(a.AckV, 20)
 	bitmap |= indicatorFieldUint(a.AckX, 19)
@@ -159,15 +157,13 @@ func (w *WIF0) Size() uint32 {
 }
 
 func (w *WIF0) Pack() []byte {
-	buf := []byte{}
 	w.IndicatorField0 = IndicatorField0{
 		If7Enable: w.Wif7Enable,
 		If3Enable: w.Wif3Enable,
 		If2Enable: w.Wif2Enable,
 		If1Enable: w.Wif1Enable,
 	}
-	buf = w.IndicatorField0.Pack()
-	return buf
+	return w.IndicatorField0.Pack()
 }
 
 func (w *WIF0) Unpack(buf []byte) {
@@ -191,15 +187,13 @@ func (e *EIF0) Size() uint32 {
 }
 
 func (e *EIF0) Pack() []byte {
-	buf := []byte{}
 	e.IndicatorField0 = IndicatorField0{
 		If7Enable: e.Eif7Enable,
 		If3Enable: e.Eif3Enable,
 		If2Enable: e.Eif2Enable,
 		If1Enable: e.Eif1Enable,
 	}
-	buf = e.IndicatorField0.Pack()
-	return buf
+	return e.IndicatorField0.Pack()
 }
 
 func (e *EIF0) Unpack(buf []byte) {

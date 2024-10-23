@@ -23,7 +23,7 @@ type Gain struct {
 	Stage2 float64
 }
 
-func (g Gain) Size() uint32 {
+func (g *Gain) Size() uint32 {
 	return gainBytes
 }
 
@@ -45,7 +45,7 @@ type DeviceIdentifier struct {
 	DeviceCode      uint16
 }
 
-func (d DeviceIdentifier) Size() uint32 {
+func (d *DeviceIdentifier) Size() uint32 {
 	return deviceIdentifierBytes
 }
 
@@ -65,8 +65,8 @@ func (d *DeviceIdentifier) Unpack(buf []byte) {
 
 // Ephemeris
 type Ephemeris struct {
-	Tsi                 uint8
-	Tsf                 uint8
+	Tsi                 Tsi
+	Tsf                 Tsf
 	ManufacturerOui     uint32
 	IntegerTimestamp    uint32
 	FractionalTimestamp uint64
@@ -81,12 +81,8 @@ type Ephemeris struct {
 	VelocityDz          float64
 }
 
-func (e Ephemeris) Size() uint32 {
-	return ephemerisBytes
-}
-
-func NewEphemeris() Ephemeris {
-	return Ephemeris{
+func NewEphemeris() *Ephemeris {
+	return &Ephemeris{
 		Tsi:                 0,
 		Tsf:                 0,
 		ManufacturerOui:     0,
@@ -102,6 +98,10 @@ func NewEphemeris() Ephemeris {
 		VelocityDy:          FromFixed(int32(0x7FFFFFFF), 16),
 		VelocityDz:          FromFixed(int32(0x7FFFFFFF), 16),
 	}
+}
+
+func (e *Ephemeris) Size() uint32 {
+	return ephemerisBytes
 }
 
 func (e *Ephemeris) Pack() []byte {
@@ -127,8 +127,8 @@ func (e *Ephemeris) Pack() []byte {
 
 func (e *Ephemeris) Unpack(buf []byte) {
 	word1 := binary.BigEndian.Uint32(buf[0:])
-	e.Tsi = uint8((word1 >> 26) & 3)
-	e.Tsf = uint8((word1 >> 24) & 3)
+	e.Tsi = Tsi((word1 >> 26) & 3)
+	e.Tsf = Tsf((word1 >> 24) & 3)
 	e.ManufacturerOui = uint32((word1 & 0xFFFFFF))
 	e.IntegerTimestamp = binary.BigEndian.Uint32(buf[4:])
 	e.FractionalTimestamp = binary.BigEndian.Uint64(buf[8:])
@@ -145,8 +145,8 @@ func (e *Ephemeris) Unpack(buf []byte) {
 
 // Geolocation
 type Geolocation struct {
-	Tsi                 uint8
-	Tsf                 uint8
+	Tsi                 Tsi
+	Tsf                 Tsf
 	ManufacturerOui     uint32
 	IntegerTimestamp    uint32
 	FractionalTimestamp uint64
@@ -159,12 +159,8 @@ type Geolocation struct {
 	MagneticVariation   float64
 }
 
-func (g Geolocation) Size() uint32 {
-	return geolocationBytes
-}
-
-func NewGeolocation() Geolocation {
-	return Geolocation{
+func NewGeolocation() *Geolocation {
+	return &Geolocation{
 		Tsi:                 0,
 		Tsf:                 0,
 		ManufacturerOui:     0,
@@ -178,6 +174,10 @@ func NewGeolocation() Geolocation {
 		TrackAngle:          FromFixed(int32(0x7FFFFFFF), 22),
 		MagneticVariation:   FromFixed(int32(0x7FFFFFFF), 22),
 	}
+}
+
+func (g *Geolocation) Size() uint32 {
+	return geolocationBytes
 }
 
 func (g *Geolocation) Pack() []byte {
@@ -202,8 +202,8 @@ func (g *Geolocation) Pack() []byte {
 
 func (g *Geolocation) Unpack(buf []byte) {
 	word1 := binary.BigEndian.Uint32(buf[0:])
-	g.Tsi = uint8((word1 >> 26) & 3)
-	g.Tsf = uint8((word1 >> 24) & 3)
+	g.Tsi = Tsi((word1 >> 26) & 3)
+	g.Tsf = Tsf((word1 >> 24) & 3)
 	g.ManufacturerOui = uint32((word1 & 0xFFFFFF))
 	g.IntegerTimestamp = binary.BigEndian.Uint32(buf[4:])
 	g.FractionalTimestamp = binary.BigEndian.Uint64(buf[8:])
@@ -223,18 +223,17 @@ type GpsAscii struct {
 	AsciiSentences  []uint8
 }
 
+func NewGpsAscii() *GpsAscii {
+	return &GpsAscii{
+		AsciiSentences: []uint8{},
+	}
+}
+
 func (g *GpsAscii) Size() uint32 {
 	return uint32(8 + g.NumberOfWords*4)
 
 }
 
-func NewGpsAscii() GpsAscii {
-	return GpsAscii{
-		ManufacturerOui: 0,
-		NumberOfWords:   0,
-		AsciiSentences:  []uint8{},
-	}
-}
 func (g *GpsAscii) Pack() []byte {
 	buf := make([]byte, g.Size())
 	binary.BigEndian.PutUint32(buf[0:], g.ManufacturerOui)
@@ -268,17 +267,10 @@ type PayloadFormat struct {
 	VectorSize           uint32
 }
 
-func NewPayloadFormat() PayloadFormat {
-	return PayloadFormat{
-		ItemPackingFieldSize: 1,
-		DataItemSize:         1,
-		RepeatCount:          1,
-		VectorSize:           1,
-	}
-}
-func (p PayloadFormat) Size() uint32 {
+func (p *PayloadFormat) Size() uint32 {
 	return payloadFormatBytes
 }
+
 func (p *PayloadFormat) Pack() []byte {
 	buf := make([]byte, p.Size())
 	word1 := uint32(0)
@@ -321,17 +313,17 @@ func (p *PayloadFormat) Pack() []byte {
 
 func (p *PayloadFormat) Unpack(buf []byte) {
 	vectorSize := uint32(binary.BigEndian.Uint16(buf[6:]))
-	if vectorSize < 0xFFFF {
+	if vectorSize > 0 {
 		p.VectorSize = vectorSize + 1
 	} else {
-		p.VectorSize = 0x10000
+		p.VectorSize = 0
 	}
 
 	repeatCount := uint32(binary.BigEndian.Uint16(buf[4:]))
-	if repeatCount < 0xFFFF {
+	if repeatCount > 0 {
 		p.RepeatCount = repeatCount + 1
 	} else {
-		p.RepeatCount = 0x10000
+		p.RepeatCount = 0
 	}
 	word1 := binary.BigEndian.Uint32(buf[0:])
 	p.PackingMethod = ((word1 >> 31) & 1) != 0
@@ -343,17 +335,17 @@ func (p *PayloadFormat) Unpack(buf []byte) {
 	p.DataItemFractionSize = uint8((word1 >> 12) & 15)
 
 	itemPackingFieldSize := uint8((word1 >> 6) & 63)
-	if itemPackingFieldSize < 64 {
+	if itemPackingFieldSize > 0 {
 		p.ItemPackingFieldSize = itemPackingFieldSize + 1
 	} else {
-		p.ItemPackingFieldSize = 64
+		p.ItemPackingFieldSize = 0
 	}
 
 	dataItemSize := uint8(word1 & 63)
-	if dataItemSize < 64 {
+	if dataItemSize > 0 {
 		p.DataItemSize = dataItemSize + 1
 	} else {
-		p.DataItemSize = 64
+		p.DataItemSize = 0
 	}
 }
 
@@ -371,6 +363,16 @@ type ContextAssociationLists struct {
 	AsyncTagList       []uint32
 }
 
+func NewContextAssociationLists() *ContextAssociationLists {
+	return &ContextAssociationLists{
+		SourceList:   []uint32{},
+		SystemList:   []uint32{},
+		VectorList:   []uint32{},
+		AsyncList:    []uint32{},
+		AsyncTagList: []uint32{},
+	}
+}
+
 func (c *ContextAssociationLists) Size() uint32 {
 	asyncTag := uint16(0)
 	if c.AsyncTagListEnable {
@@ -381,16 +383,6 @@ func (c *ContextAssociationLists) Size() uint32 {
 		uint32(c.VectorListSize)+
 		uint32(c.AsyncListSize)+
 		uint32(c.AsyncListSize*asyncTag))
-}
-
-func NewContextAssociationLists() *ContextAssociationLists {
-	return &ContextAssociationLists{
-		SourceList:   []uint32{},
-		SystemList:   []uint32{},
-		VectorList:   []uint32{},
-		AsyncList:    []uint32{},
-		AsyncTagList: []uint32{},
-	}
 }
 
 func (c *ContextAssociationLists) Pack() []byte {
