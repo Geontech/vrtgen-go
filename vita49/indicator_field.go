@@ -8,14 +8,14 @@ const (
 
 type IndicatorField struct{}
 
-func (f IndicatorField) Size() uint32 {
+func (f *IndicatorField) Size() uint32 {
 	return indicatorFieldBytes
 }
 
 type IndicatorField0 struct {
 	IndicatorField
 	ChangeIndicator          bool // bit position 31
-	ReferencePointId         bool // bit position 30
+	ReferencePointID         bool // bit position 30
 	Bandwidth                bool // bit position 29
 	IfRefFrequency           bool // bit position 28
 	RfRefFrequency           bool // bit position 27
@@ -28,14 +28,14 @@ type IndicatorField0 struct {
 	TimestampAdjustment      bool // bit position 20
 	TimestampCalibrationTime bool // bit position 19
 	Temperature              bool // bit position 18
-	DeviceId                 bool // bit position 17
+	DeviceID                 bool // bit position 17
 	StateEventIndicators     bool // bit position 16
 	SignalDataFormat         bool // bit position 15
 	FormattedGps             bool // bit position 14
 	FormattedIns             bool // bit position 13
 	EcefEphemeris            bool // bit position 12
 	RelativeEphemeris        bool // bit position 11
-	EphemerisRefId           bool // bit position 10
+	EphemerisRefID           bool // bit position 10
 	GpsAscii                 bool // bit position 9
 	ContextAssociationLists  bool // bit position 8
 	If7Enable                bool // bit position 7
@@ -77,17 +77,17 @@ type IndicatorField1 struct {
 type IndicatorField2 struct {
 	IndicatorField
 	Bind                    bool // bit position 31
-	CitedSid                bool // bit position 30
-	SiblingSid              bool // bit position 29
-	ParentSid               bool // bit position 28
-	ChildSid                bool // bit position 27
-	CitedMessageId          bool // bit position 26
-	ControlleeId            bool // bit position 25
-	ControlleeUuid          bool // bit position 24
-	ControllerId            bool // bit position 23
-	ControllerUuid          bool // bit position 22
+	CitedSID                bool // bit position 30
+	SiblingSID              bool // bit position 29
+	ParentSID               bool // bit position 28
+	ChildSID                bool // bit position 27
+	CitedMessageID          bool // bit position 26
+	ControlleeID            bool // bit position 25
+	ControlleeUUID          bool // bit position 24
+	ControllerID            bool // bit position 23
+	ControllerUUID          bool // bit position 22
 	InformationSource       bool // bit position 21
-	TraceId                 bool // bit position 20
+	TraceID                 bool // bit position 20
 	CountryCode             bool // bit position 19
 	Operator                bool // bit position 18
 	PlatformClass           bool // bit position 17
@@ -98,17 +98,13 @@ type IndicatorField2 struct {
 	EmsDeviceInstance       bool // bit position 12
 	ModulationClass         bool // bit position 11
 	ModulationType          bool // bit position 10
-	FunctionId              bool // bit position 9
-	ModeId                  bool // bit position 8
-	EventId                 bool // bit position 7
-	FunctionPriorityId      bool // bit position 6
-	CommunicationPriorityId bool // bit position 5
+	FunctionID              bool // bit position 9
+	ModeID                  bool // bit position 8
+	EventID                 bool // bit position 7
+	FunctionPriorityID      bool // bit position 6
+	CommunicationPriorityID bool // bit position 5
 	RfFootprint             bool // bit position 4
 	RfFootprintRange        bool // bit position 3
-}
-
-func (f IndicatorField2) Size() uint32 {
-	return 4
 }
 
 type IndicatorField3 struct {
@@ -131,7 +127,7 @@ type IndicatorField3 struct {
 	BarometricPressure   bool // bit position 4
 	SeaSwellState        bool // bit position 3
 	TroposphericState    bool // bit position 2
-	NetworkId            bool // bit position 1
+	NetworkID            bool // bit position 1
 }
 
 type IndicatorField7 struct {
@@ -163,7 +159,7 @@ func indicatorFieldBool(v uint32, b uint32) bool {
 	return (v & (uint32(1) << b)) != 0
 }
 
-func (f IndicatorField0) Size() uint32 {
+func (f *IndicatorField0) Size() uint32 {
 	return 4
 }
 
@@ -171,7 +167,7 @@ func (f *IndicatorField0) Pack() []byte {
 	buf := make([]byte, f.Size())
 	var bitmap uint32
 	bitmap |= indicatorFieldUint(f.ChangeIndicator, 31)
-	bitmap |= indicatorFieldUint(f.ReferencePointId, 30)
+	bitmap |= indicatorFieldUint(f.ReferencePointID, 30)
 	bitmap |= indicatorFieldUint(f.Bandwidth, 29)
 	bitmap |= indicatorFieldUint(f.IfRefFrequency, 28)
 	bitmap |= indicatorFieldUint(f.RfRefFrequency, 27)
@@ -184,14 +180,14 @@ func (f *IndicatorField0) Pack() []byte {
 	bitmap |= indicatorFieldUint(f.TimestampAdjustment, 20)
 	bitmap |= indicatorFieldUint(f.TimestampCalibrationTime, 19)
 	bitmap |= indicatorFieldUint(f.Temperature, 18)
-	bitmap |= indicatorFieldUint(f.DeviceId, 17)
+	bitmap |= indicatorFieldUint(f.DeviceID, 17)
 	bitmap |= indicatorFieldUint(f.StateEventIndicators, 16)
 	bitmap |= indicatorFieldUint(f.SignalDataFormat, 15)
 	bitmap |= indicatorFieldUint(f.FormattedGps, 14)
 	bitmap |= indicatorFieldUint(f.FormattedIns, 13)
 	bitmap |= indicatorFieldUint(f.EcefEphemeris, 12)
 	bitmap |= indicatorFieldUint(f.RelativeEphemeris, 11)
-	bitmap |= indicatorFieldUint(f.EphemerisRefId, 10)
+	bitmap |= indicatorFieldUint(f.EphemerisRefID, 10)
 	bitmap |= indicatorFieldUint(f.GpsAscii, 9)
 	bitmap |= indicatorFieldUint(f.ContextAssociationLists, 8)
 	bitmap |= indicatorFieldUint(f.If7Enable, 7)
@@ -205,7 +201,7 @@ func (f *IndicatorField0) Pack() []byte {
 func (f *IndicatorField0) Unpack(buf []byte) {
 	bitmap := binary.BigEndian.Uint32(buf)
 	f.ChangeIndicator = indicatorFieldBool(bitmap, 31)
-	f.ReferencePointId = indicatorFieldBool(bitmap, 30)
+	f.ReferencePointID = indicatorFieldBool(bitmap, 30)
 	f.Bandwidth = indicatorFieldBool(bitmap, 29)
 	f.IfRefFrequency = indicatorFieldBool(bitmap, 28)
 	f.RfRefFrequency = indicatorFieldBool(bitmap, 27)
@@ -218,14 +214,14 @@ func (f *IndicatorField0) Unpack(buf []byte) {
 	f.TimestampAdjustment = indicatorFieldBool(bitmap, 20)
 	f.TimestampCalibrationTime = indicatorFieldBool(bitmap, 19)
 	f.Temperature = indicatorFieldBool(bitmap, 18)
-	f.DeviceId = indicatorFieldBool(bitmap, 17)
+	f.DeviceID = indicatorFieldBool(bitmap, 17)
 	f.StateEventIndicators = indicatorFieldBool(bitmap, 16)
 	f.SignalDataFormat = indicatorFieldBool(bitmap, 15)
 	f.FormattedGps = indicatorFieldBool(bitmap, 14)
 	f.FormattedIns = indicatorFieldBool(bitmap, 13)
 	f.EcefEphemeris = indicatorFieldBool(bitmap, 12)
 	f.RelativeEphemeris = indicatorFieldBool(bitmap, 11)
-	f.EphemerisRefId = indicatorFieldBool(bitmap, 10)
+	f.EphemerisRefID = indicatorFieldBool(bitmap, 10)
 	f.GpsAscii = indicatorFieldBool(bitmap, 9)
 	f.ContextAssociationLists = indicatorFieldBool(bitmap, 8)
 	f.If7Enable = indicatorFieldBool(bitmap, 7)
@@ -234,7 +230,7 @@ func (f *IndicatorField0) Unpack(buf []byte) {
 	f.If1Enable = indicatorFieldBool(bitmap, 1)
 }
 
-func (f IndicatorField1) Size() uint32 {
+func (f *IndicatorField1) Size() uint32 {
 	return 4
 }
 
@@ -299,4 +295,77 @@ func (f *IndicatorField1) Unpack(buf []byte) {
 	f.V49SpecCompliance = indicatorFieldBool(bitmap, 3)
 	f.VersionInformation = indicatorFieldBool(bitmap, 2)
 	f.BufferSize = indicatorFieldBool(bitmap, 1)
+}
+
+func (f *IndicatorField2) Size() uint32 {
+	return 4
+}
+
+func (f *IndicatorField2) Pack() []byte {
+	buf := make([]byte, f.Size())
+	var bitmap uint32
+	bitmap |= indicatorFieldUint(f.Bind, 31)
+	bitmap |= indicatorFieldUint(f.CitedSID, 30)
+	bitmap |= indicatorFieldUint(f.SiblingSID, 29)
+	bitmap |= indicatorFieldUint(f.ParentSID, 28)
+	bitmap |= indicatorFieldUint(f.ChildSID, 27)
+	bitmap |= indicatorFieldUint(f.CitedMessageID, 26)
+	bitmap |= indicatorFieldUint(f.ControlleeID, 25)
+	bitmap |= indicatorFieldUint(f.ControlleeUUID, 24)
+	bitmap |= indicatorFieldUint(f.ControllerID, 23)
+	bitmap |= indicatorFieldUint(f.ControllerUUID, 22)
+	bitmap |= indicatorFieldUint(f.InformationSource, 21)
+	bitmap |= indicatorFieldUint(f.TraceID, 20)
+	bitmap |= indicatorFieldUint(f.CountryCode, 19)
+	bitmap |= indicatorFieldUint(f.Operator, 18)
+	bitmap |= indicatorFieldUint(f.PlatformClass, 17)
+	bitmap |= indicatorFieldUint(f.PlatformInstance, 16)
+	bitmap |= indicatorFieldUint(f.PlatformDisplay, 15)
+	bitmap |= indicatorFieldUint(f.EmsDeviceClass, 14)
+	bitmap |= indicatorFieldUint(f.EmsDeviceType, 13)
+	bitmap |= indicatorFieldUint(f.EmsDeviceInstance, 12)
+	bitmap |= indicatorFieldUint(f.ModulationClass, 11)
+	bitmap |= indicatorFieldUint(f.ModulationType, 10)
+	bitmap |= indicatorFieldUint(f.FunctionID, 9)
+	bitmap |= indicatorFieldUint(f.ModeID, 8)
+	bitmap |= indicatorFieldUint(f.EventID, 7)
+	bitmap |= indicatorFieldUint(f.FunctionPriorityID, 6)
+	bitmap |= indicatorFieldUint(f.CommunicationPriorityID, 5)
+	bitmap |= indicatorFieldUint(f.RfFootprint, 4)
+	bitmap |= indicatorFieldUint(f.RfFootprintRange, 3)
+	binary.BigEndian.PutUint32(buf, bitmap)
+	return buf
+}
+
+func (f *IndicatorField2) Unpack(buf []byte) {
+	bitmap := binary.BigEndian.Uint32(buf)
+	f.Bind = indicatorFieldBool(bitmap, 31)
+	f.CitedSID = indicatorFieldBool(bitmap, 30)
+	f.SiblingSID = indicatorFieldBool(bitmap, 29)
+	f.ParentSID = indicatorFieldBool(bitmap, 28)
+	f.ChildSID = indicatorFieldBool(bitmap, 27)
+	f.CitedMessageID = indicatorFieldBool(bitmap, 26)
+	f.ControlleeID = indicatorFieldBool(bitmap, 25)
+	f.ControlleeUUID = indicatorFieldBool(bitmap, 24)
+	f.ControllerID = indicatorFieldBool(bitmap, 23)
+	f.ControllerUUID = indicatorFieldBool(bitmap, 22)
+	f.InformationSource = indicatorFieldBool(bitmap, 21)
+	f.TraceID = indicatorFieldBool(bitmap, 20)
+	f.CountryCode = indicatorFieldBool(bitmap, 19)
+	f.Operator = indicatorFieldBool(bitmap, 18)
+	f.PlatformClass = indicatorFieldBool(bitmap, 17)
+	f.PlatformInstance = indicatorFieldBool(bitmap, 16)
+	f.PlatformDisplay = indicatorFieldBool(bitmap, 15)
+	f.EmsDeviceClass = indicatorFieldBool(bitmap, 14)
+	f.EmsDeviceType = indicatorFieldBool(bitmap, 13)
+	f.EmsDeviceInstance = indicatorFieldBool(bitmap, 12)
+	f.ModulationClass = indicatorFieldBool(bitmap, 11)
+	f.ModulationType = indicatorFieldBool(bitmap, 10)
+	f.FunctionID = indicatorFieldBool(bitmap, 9)
+	f.ModeID = indicatorFieldBool(bitmap, 8)
+	f.EventID = indicatorFieldBool(bitmap, 7)
+	f.FunctionPriorityID = indicatorFieldBool(bitmap, 6)
+	f.CommunicationPriorityID = indicatorFieldBool(bitmap, 5)
+	f.RfFootprint = indicatorFieldBool(bitmap, 4)
+	f.RfFootprintRange = indicatorFieldBool(bitmap, 3)
 }

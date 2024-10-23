@@ -40,22 +40,22 @@ func TestChangeIndicator(t *testing.T) {
 	assert.Equal(t, false, indField.ChangeIndicator)
 }
 
-func TestReferencePointId(t *testing.T) {
+func TestReferencePointID(t *testing.T) {
 	// Default is false
 	indField := IndicatorField0{}
-	assert.Equal(t, false, indField.ReferencePointId)
+	assert.Equal(t, false, indField.ReferencePointID)
 	packAndUnpack(t, &indField, 0, 30)
-	assert.Equal(t, false, indField.ReferencePointId)
+	assert.Equal(t, false, indField.ReferencePointID)
 	// Set true
-	indField.ReferencePointId = true
-	assert.Equal(t, true, indField.ReferencePointId)
+	indField.ReferencePointID = true
+	assert.Equal(t, true, indField.ReferencePointID)
 	packAndUnpack(t, &indField, 1, 30)
-	assert.Equal(t, true, indField.ReferencePointId)
+	assert.Equal(t, true, indField.ReferencePointID)
 	// Set back to false
-	indField.ReferencePointId = false
-	assert.Equal(t, false, indField.ReferencePointId)
+	indField.ReferencePointID = false
+	assert.Equal(t, false, indField.ReferencePointID)
 	packAndUnpack(t, &indField, 0, 30)
-	assert.Equal(t, false, indField.ReferencePointId)
+	assert.Equal(t, false, indField.ReferencePointID)
 }
 
 func TestBandwidth(t *testing.T) {

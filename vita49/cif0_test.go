@@ -191,8 +191,8 @@ func TestEphemerisSize(t *testing.T) {
 func TestEphemerisDefault(t *testing.T) {
 	// Construct
 	e := NewEphemeris()
-	assert.Equal(t, uint8(0), e.Tsi)
-	assert.Equal(t, uint8(0), e.Tsf)
+	assert.Equal(t, Tsi(0), e.Tsi)
+	assert.Equal(t, Tsf(0), e.Tsf)
 	assert.Equal(t, uint32(0), e.ManufacturerOui)
 	assert.Equal(t, uint32(^uint32(0)), e.IntegerTimestamp)
 	assert.Equal(t, uint64(^uint64(0)), e.FractionalTimestamp)
@@ -217,8 +217,8 @@ func TestEphemerisDefault(t *testing.T) {
 	assert.Equal(t, expected, packed)
 	// Unpack
 	e.Unpack(packed)
-	assert.Equal(t, uint8(0), e.Tsi)
-	assert.Equal(t, uint8(0), e.Tsf)
+	assert.Equal(t, Tsi(0), e.Tsi)
+	assert.Equal(t, Tsf(0), e.Tsf)
 	assert.Equal(t, uint32(0), e.ManufacturerOui)
 	assert.Equal(t, uint32(^uint32(0)), e.IntegerTimestamp)
 	assert.Equal(t, uint64(^uint64(0)), e.FractionalTimestamp)
@@ -237,8 +237,8 @@ func TestEphemeris(t *testing.T) {
 	cases := []struct {
 		name                string
 		offset              uint16
-		tsi                 uint8
-		tsf                 uint8
+		tsi                 Tsi
+		tsf                 Tsf
 		manufactureroui     uint32
 		integertimestamp    uint32
 		fractionaltimestamp uint64
@@ -413,8 +413,8 @@ func TestGeolocationSize(t *testing.T) {
 func TestGeolocationDefault(t *testing.T) {
 	// Construct
 	g := NewGeolocation()
-	assert.Equal(t, uint8(0), g.Tsi)
-	assert.Equal(t, uint8(0), g.Tsf)
+	assert.Equal(t, Tsi(0), g.Tsi)
+	assert.Equal(t, Tsf(0), g.Tsf)
 	assert.Equal(t, uint32(0), g.ManufacturerOui)
 	assert.Equal(t, uint32(^uint32(0)), g.IntegerTimestamp)
 	assert.Equal(t, uint64(^uint64(0)), g.FractionalTimestamp)
@@ -435,8 +435,8 @@ func TestGeolocationDefault(t *testing.T) {
 	assert.Equal(t, expected, packed)
 	// Unpack
 	g.Unpack(packed)
-	assert.Equal(t, uint8(0), g.Tsi)
-	assert.Equal(t, uint8(0), g.Tsf)
+	assert.Equal(t, Tsi(0), g.Tsi)
+	assert.Equal(t, Tsf(0), g.Tsf)
 	assert.Equal(t, uint32(0), g.ManufacturerOui)
 	assert.Equal(t, uint32(^uint32(0)), g.IntegerTimestamp)
 	assert.Equal(t, uint64(^uint64(0)), g.FractionalTimestamp)
@@ -452,8 +452,8 @@ func TestGeolocationDefault(t *testing.T) {
 func TestGeolocation(t *testing.T) {
 	cases := []struct {
 		name                string
-		tsi                 uint8
-		tsf                 uint8
+		tsi                 Tsi
+		tsf                 Tsf
 		manufactureroui     uint32
 		integertimestamp    uint32
 		fractionaltimestamp uint64
@@ -475,13 +475,13 @@ func TestGeolocation(t *testing.T) {
 		},
 		{
 			name:     "Rule 9.4.5-3",
-			tsi:      3,
+			tsi:      Tsi(3),
 			expected: []byte{0x0C, 0, 0, 0},
 			offset:   0,
 		},
 		{
 			name:     "Rule 9.4.5-4",
-			tsf:      3,
+			tsf:      Tsf(3),
 			expected: []byte{0x03, 0, 0, 0},
 			offset:   0,
 		},
@@ -595,7 +595,7 @@ func TestGeolocation(t *testing.T) {
 
 // GPS ASCII
 func TestGpsAsciiSize(t *testing.T) {
-	g := GpsAscii{}
+	g := NewGpsAscii()
 	assert.Equal(t, uint32(8), g.Size())
 }
 
@@ -603,7 +603,7 @@ func TestGpsAsciiDefault(t *testing.T) {
 	g := NewGpsAscii()
 	assert.Equal(t, uint32(0), g.ManufacturerOui)
 	assert.Equal(t, uint32(0), g.NumberOfWords)
-	assert.Equal(t, []uint8{}, g.AsciiSentences)
+	assert.Equal(t, 0, len(g.AsciiSentences))
 
 	// Pack
 	packed := g.Pack()
@@ -613,7 +613,7 @@ func TestGpsAsciiDefault(t *testing.T) {
 	g.Unpack(packed)
 	assert.Equal(t, uint32(0), g.ManufacturerOui)
 	assert.Equal(t, uint32(0), g.NumberOfWords)
-	assert.Equal(t, []uint8{}, g.AsciiSentences)
+	assert.Equal(t, 0, len(g.AsciiSentences))
 }
 
 func TestGpsAscii(t *testing.T) {
@@ -650,7 +650,7 @@ func TestGpsAscii(t *testing.T) {
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			g := NewGpsAscii()
+			g := GpsAscii{}
 			g.ManufacturerOui = tc.manufactureroui
 			g.NumberOfWords = tc.numberofwords
 			g.AsciiSentences = tc.asciisentences
@@ -680,7 +680,7 @@ func TestPayloadFormatSize(t *testing.T) {
 }
 
 func TestPayloadFormatDefault(t *testing.T) {
-	p := NewPayloadFormat()
+	p := PayloadFormat{}
 	assert.Equal(t, false, p.PackingMethod)
 	assert.Equal(t, uint8(0), p.RealComplexType)
 	assert.Equal(t, uint8(0), p.DataItemFormat)
@@ -688,10 +688,10 @@ func TestPayloadFormatDefault(t *testing.T) {
 	assert.Equal(t, uint8(0), p.EventTagSize)
 	assert.Equal(t, uint8(0), p.ChannelTagSize)
 	assert.Equal(t, uint8(0), p.DataItemFractionSize)
-	assert.Equal(t, uint8(1), p.ItemPackingFieldSize)
-	assert.Equal(t, uint8(1), p.DataItemSize)
-	assert.Equal(t, uint32(1), p.RepeatCount)
-	assert.Equal(t, uint32(1), p.VectorSize)
+	assert.Equal(t, uint8(0), p.ItemPackingFieldSize)
+	assert.Equal(t, uint8(0), p.DataItemSize)
+	assert.Equal(t, uint32(0), p.RepeatCount)
+	assert.Equal(t, uint32(0), p.VectorSize)
 
 	// Pack
 	packed := p.Pack()
@@ -706,10 +706,10 @@ func TestPayloadFormatDefault(t *testing.T) {
 	assert.Equal(t, uint8(0), p.EventTagSize)
 	assert.Equal(t, uint8(0), p.ChannelTagSize)
 	assert.Equal(t, uint8(0), p.DataItemFractionSize)
-	assert.Equal(t, uint8(1), p.ItemPackingFieldSize)
-	assert.Equal(t, uint8(1), p.DataItemSize)
-	assert.Equal(t, uint32(1), p.RepeatCount)
-	assert.Equal(t, uint32(1), p.VectorSize)
+	assert.Equal(t, uint8(0), p.ItemPackingFieldSize)
+	assert.Equal(t, uint8(0), p.DataItemSize)
+	assert.Equal(t, uint32(0), p.RepeatCount)
+	assert.Equal(t, uint32(0), p.VectorSize)
 }
 
 func TestPayloadFormat(t *testing.T) {
@@ -833,25 +833,25 @@ func TestPayloadFormat(t *testing.T) {
 			assert.Equal(t, tc.channeltagsize, p.ChannelTagSize)
 			assert.Equal(t, tc.dataitemfractionsize, p.DataItemFractionSize)
 
-			if tc.vectorsize < 0xFFFF {
+			if tc.vectorsize > 0 && tc.vectorsize < 0xFFFF {
 				assert.Equal(t, 1+tc.vectorsize, p.VectorSize)
 			} else {
 				assert.Equal(t, tc.vectorsize, p.VectorSize)
 			}
 
-			if tc.repeatcount < 0xFFFF {
+			if tc.repeatcount > 0 && tc.repeatcount < 0xFFFF {
 				assert.Equal(t, 1+tc.repeatcount, p.RepeatCount)
 			} else {
 				assert.Equal(t, tc.repeatcount, p.RepeatCount)
 			}
 
-			if tc.itempackingfieldsize < 64 {
+			if tc.itempackingfieldsize > 0 && tc.itempackingfieldsize < 64 {
 				assert.Equal(t, 1+tc.itempackingfieldsize, p.ItemPackingFieldSize)
 			} else {
 				assert.Equal(t, tc.itempackingfieldsize, p.ItemPackingFieldSize)
 			}
 
-			if tc.dataitemsize < 64 {
+			if tc.dataitemsize > 0 && tc.dataitemsize < 64 {
 				assert.Equal(t, 1+tc.dataitemsize, p.DataItemSize)
 			} else {
 				assert.Equal(t, tc.dataitemsize, p.DataItemSize)
