@@ -31,9 +31,9 @@ type PacketType uint8
 
 const (
 	SignalData PacketType = iota
-	SignalDataStreamId
+	SignalDataStreamID
 	ExtensionData
-	ExtensionDataStreamId
+	ExtensionDataStreamID
 	Context
 	ExtensionContext
 	Command
