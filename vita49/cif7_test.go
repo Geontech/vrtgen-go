@@ -8,7 +8,7 @@ import (
 
 func TestBeliefBytes(t *testing.T) {
 	p := Belief{}
-	assert.Equal(t, beliefBytes, p.Size())
+	assert.Equal(t, uint32(4), p.Size())
 }
 
 func TestBeliefDefault(t *testing.T) {
@@ -61,7 +61,7 @@ func TestBelief(t *testing.T) {
 
 func TestProbabilityBytes(t *testing.T) {
 	p := Probability{}
-	assert.Equal(t, beliefBytes, p.Size())
+	assert.Equal(t, uint32(4), p.Size())
 }
 
 func TestProbabilityDefault(t *testing.T) {

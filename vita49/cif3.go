@@ -4,11 +4,6 @@ import (
 	"encoding/binary"
 )
 
-const (
-	TimestampDetailsBytes = uint32(8)
-	SeaSwellStateBytes    = uint32(4)
-)
-
 type TimestampDetails struct {
 	UserDefined           uint8
 	Global                bool
@@ -22,7 +17,7 @@ type TimestampDetails struct {
 }
 
 func (t TimestampDetails) Size() uint32 {
-	return TimestampDetailsBytes
+	return 8
 }
 
 func (t *TimestampDetails) Pack() []byte {
@@ -65,7 +60,7 @@ type SeaSwellState struct {
 }
 
 func (s SeaSwellState) Size() uint32 {
-	return SeaSwellStateBytes
+	return 4
 }
 
 func (s *SeaSwellState) Pack() []byte {

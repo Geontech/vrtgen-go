@@ -4,11 +4,6 @@ import (
 	"encoding/binary"
 )
 
-const (
-	beliefBytes      = uint32(4)
-	probabilityBytes = uint32(4)
-)
-
 type Cif7 struct {
 	IndicatorField7
 	CurrentValue      uint32
@@ -33,12 +28,12 @@ type Belief struct {
 }
 
 func (b Belief) Size() uint32 {
-	return beliefBytes
+	return 4
 }
 
 func (b *Belief) Pack() []byte {
 	// 1 word
-	retval := make([]byte, 4)
+	retval := make([]byte, b.Size())
 
 	word1 := uint32(0)
 	word1 |= uint32(b.BeliefPercent & 0xFF) // Bits 0-7
@@ -59,12 +54,12 @@ type Probability struct {
 }
 
 func (p Probability) Size() uint32 {
-	return probabilityBytes
+	return 4
 }
 
 func (p *Probability) Pack() []byte {
 	// 1 word
-	retval := make([]byte, 4)
+	retval := make([]byte, p.Size())
 
 	word1 := uint32(0)
 	word1 |= uint32(p.ProbabilityFunction&0xFF) << 8 // Bits 8-15

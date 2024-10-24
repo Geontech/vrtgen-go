@@ -19,7 +19,7 @@ func packAndUnpack(t *testing.T, i *IndicatorField0, v uint32, b uint8) {
 
 func TestIndicatorFieldSize(t *testing.T) {
 	indField := IndicatorField0{}
-	assert.Equal(t, indField.Size(), indicatorFieldBytes)
+	assert.Equal(t, uint32(4), indField.Size())
 }
 
 func TestChangeIndicator(t *testing.T) {

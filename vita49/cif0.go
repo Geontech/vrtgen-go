@@ -5,14 +5,6 @@ import (
 	"encoding/binary"
 )
 
-const (
-	gainBytes             = uint32(4)
-	deviceIdentifierBytes = uint32(8)
-	ephemerisBytes        = uint32(52)
-	geolocationBytes      = uint32(44)
-	payloadFormatBytes    = uint32(8)
-)
-
 type Cif0 struct {
 	IndicatorField0
 }
@@ -24,7 +16,7 @@ type Gain struct {
 }
 
 func (g *Gain) Size() uint32 {
-	return gainBytes
+	return 4
 }
 
 func (g *Gain) Pack() []byte {
@@ -46,7 +38,7 @@ type DeviceIdentifier struct {
 }
 
 func (d *DeviceIdentifier) Size() uint32 {
-	return deviceIdentifierBytes
+	return 8
 }
 
 func (d *DeviceIdentifier) Pack() []byte {
@@ -101,7 +93,7 @@ func NewEphemeris() *Ephemeris {
 }
 
 func (e *Ephemeris) Size() uint32 {
-	return ephemerisBytes
+	return 52
 }
 
 func (e *Ephemeris) Pack() []byte {
@@ -177,7 +169,7 @@ func NewGeolocation() *Geolocation {
 }
 
 func (g *Geolocation) Size() uint32 {
-	return geolocationBytes
+	return 44
 }
 
 func (g *Geolocation) Pack() []byte {
@@ -268,7 +260,7 @@ type PayloadFormat struct {
 }
 
 func (p *PayloadFormat) Size() uint32 {
-	return payloadFormatBytes
+	return 8
 }
 
 func (p *PayloadFormat) Pack() []byte {

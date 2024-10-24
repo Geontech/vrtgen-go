@@ -2,14 +2,10 @@ package vita49
 
 import "encoding/binary"
 
-const (
-	indicatorFieldBytes = uint32(4)
-)
-
 type IndicatorField struct{}
 
 func (f *IndicatorField) Size() uint32 {
-	return indicatorFieldBytes
+	return 4
 }
 
 type IndicatorField0 struct {
@@ -159,10 +155,6 @@ func indicatorFieldBool(v uint32, b uint32) bool {
 	return (v & (uint32(1) << b)) != 0
 }
 
-func (f *IndicatorField0) Size() uint32 {
-	return 4
-}
-
 func (f *IndicatorField0) Pack() []byte {
 	buf := make([]byte, f.Size())
 	var bitmap uint32
@@ -230,10 +222,6 @@ func (f *IndicatorField0) Unpack(buf []byte) {
 	f.If1Enable = indicatorFieldBool(bitmap, 1)
 }
 
-func (f *IndicatorField1) Size() uint32 {
-	return 4
-}
-
 func (f *IndicatorField1) Pack() []byte {
 	buf := make([]byte, f.Size())
 	var bitmap uint32
@@ -295,10 +283,6 @@ func (f *IndicatorField1) Unpack(buf []byte) {
 	f.V49SpecCompliance = indicatorFieldBool(bitmap, 3)
 	f.VersionInformation = indicatorFieldBool(bitmap, 2)
 	f.BufferSize = indicatorFieldBool(bitmap, 1)
-}
-
-func (f *IndicatorField2) Size() uint32 {
-	return 4
 }
 
 func (f *IndicatorField2) Pack() []byte {
