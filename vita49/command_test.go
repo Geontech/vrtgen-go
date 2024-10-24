@@ -33,15 +33,15 @@ func TestCAMSize(t *testing.T) {
 func TestCAMDefault(t *testing.T) {
 	c := CAM{}
 	assert.Equal(t, false, c.ControlleeEnable)
-	assert.Equal(t, ControlFormat(false), c.ControlleeFormat)
+	assert.Equal(t, Word, c.ControlleeFormat)
 	assert.Equal(t, false, c.ControllerEnable)
-	assert.Equal(t, ControlFormat(false), c.ControllerFormat)
+	assert.Equal(t, Word, c.ControllerFormat)
 	assert.Equal(t, false, c.PermitPartial)
 	assert.Equal(t, false, c.PermitWarnings)
 	assert.Equal(t, false, c.PermitErrors)
-	assert.Equal(t, uint8(0), c.ActionMode)
+	assert.Equal(t, NoAction, c.ActionMode)
 	assert.Equal(t, false, c.NackOnly)
-	assert.Equal(t, uint8(0), c.TimingControl)
+	assert.Equal(t, TimestampControlMode(0), c.TimingControl)
 	// Pack
 	packed := c.Pack()
 	expected := []byte{0, 0, 0, 0}
@@ -49,30 +49,29 @@ func TestCAMDefault(t *testing.T) {
 	// Unpack
 	c.Unpack(packed)
 	assert.Equal(t, false, c.ControlleeEnable)
-	assert.Equal(t, ControlFormat(false), c.ControlleeFormat)
+	assert.Equal(t, Word, c.ControlleeFormat)
 	assert.Equal(t, false, c.ControllerEnable)
-	assert.Equal(t, ControlFormat(false), c.ControllerFormat)
+	assert.Equal(t, Word, c.ControllerFormat)
 	assert.Equal(t, false, c.PermitPartial)
 	assert.Equal(t, false, c.PermitWarnings)
-	assert.Equal(t, false, c.PermitErrors)
-	assert.Equal(t, uint8(0), c.ActionMode)
+	assert.Equal(t, NoAction, c.ActionMode)
 	assert.Equal(t, false, c.NackOnly)
-	assert.Equal(t, uint8(0), c.TimingControl)
+	assert.Equal(t, TimestampControlMode(0), c.TimingControl)
 }
 
 func TestCAM(t *testing.T) {
 	cases := []struct {
 		name             string
 		controlleeEnable bool
-		controlleeFormat ControlFormat
+		controlleeFormat IdentifierFormat
 		controllerEnable bool
-		controllerFormat ControlFormat
+		controllerFormat IdentifierFormat
 		permitPartial    bool
 		permitWarnings   bool
 		permitErrors     bool
-		actionMode       uint8
+		actionMode       ActionMode
 		nackOnly         bool
-		timingControl    uint8
+		timingControl    TimestampControlMode
 		expected         []byte
 	}{
 		{

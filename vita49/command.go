@@ -23,24 +23,43 @@ import (
 	"encoding/binary"
 )
 
-type ControlFormat bool
+type IdentifierFormat uint8
 
 const (
-	UUID ControlFormat = true
-	ID   ControlFormat = false
+	Word IdentifierFormat = iota
+	UUID
+)
+
+type ActionMode uint8
+
+const (
+	NoAction ActionMode = iota
+	DryRun
+	Execute
+)
+
+type TimestampControlMode uint8
+
+const (
+	Ignore TimestampControlMode = iota
+	Device
+	Late
+	Early
+	EarlyLate
+	TimingIssues = 7
 )
 
 type CAM struct {
 	ControlleeEnable bool
-	ControlleeFormat ControlFormat
+	ControlleeFormat IdentifierFormat
 	ControllerEnable bool
-	ControllerFormat ControlFormat
+	ControllerFormat IdentifierFormat
 	PermitPartial    bool
 	PermitWarnings   bool
 	PermitErrors     bool
-	ActionMode       uint8
+	ActionMode       ActionMode
 	NackOnly         bool
-	TimingControl    uint8
+	TimingControl    TimestampControlMode
 }
 
 func (c *CAM) Size() uint32 {
@@ -51,9 +70,17 @@ func (c *CAM) Pack() []byte {
 	buf := make([]byte, c.Size())
 	var bitmap uint32
 	bitmap |= indicatorFieldUint(c.ControlleeEnable, 31)
-	bitmap |= indicatorFieldUint(bool(c.ControlleeFormat), 30)
+	var ceFormat bool
+	if c.ControlleeFormat == UUID {
+		ceFormat = true
+	}
+	bitmap |= indicatorFieldUint(ceFormat, 30)
 	bitmap |= indicatorFieldUint(c.ControllerEnable, 29)
-	bitmap |= indicatorFieldUint(bool(c.ControllerFormat), 28)
+	var crFormat bool
+	if c.ControllerFormat == UUID {
+		crFormat = true
+	}
+	bitmap |= indicatorFieldUint(crFormat, 28)
 	bitmap |= indicatorFieldUint(c.PermitPartial, 27)
 	bitmap |= indicatorFieldUint(c.PermitWarnings, 26)
 	bitmap |= indicatorFieldUint(c.PermitErrors, 25)
@@ -67,15 +94,23 @@ func (c *CAM) Pack() []byte {
 func (c *CAM) Unpack(buf []byte) {
 	bitmap := binary.BigEndian.Uint32(buf[0:])
 	c.ControlleeEnable = indicatorFieldBool(bitmap, 31)
-	c.ControlleeFormat = ControlFormat(indicatorFieldBool(bitmap, 30))
+	if ceFormat := indicatorFieldBool(bitmap, 30); ceFormat {
+		c.ControlleeFormat = UUID
+	} else {
+		c.ControlleeFormat = Word
+	}
 	c.ControllerEnable = indicatorFieldBool(bitmap, 29)
-	c.ControllerFormat = ControlFormat(indicatorFieldBool(bitmap, 28))
+	if crFormat := indicatorFieldBool(bitmap, 28); crFormat {
+		c.ControllerFormat = UUID
+	} else {
+		c.ControllerFormat = Word
+	}
 	c.PermitPartial = indicatorFieldBool(bitmap, 27)
 	c.PermitWarnings = indicatorFieldBool(bitmap, 26)
 	c.PermitErrors = indicatorFieldBool(bitmap, 25)
-	c.ActionMode = uint8(bitmap>>23) & 3
+	c.ActionMode = ActionMode(uint8(bitmap>>23) & 3)
 	c.NackOnly = indicatorFieldBool(bitmap, 22)
-	c.TimingControl = uint8(bitmap>>12) & 7
+	c.TimingControl = TimestampControlMode(uint8(bitmap>>12) & 7)
 }
 
 type ControlCAM struct {
