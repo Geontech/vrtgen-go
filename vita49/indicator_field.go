@@ -81,8 +81,8 @@ type IndicatorField1 struct {
 	Spectrum                bool // bit position 10
 	SectorStepScan          bool // bit position 9
 	IndexList               bool // bit position 7
-	DiscreteIo32            bool // bit position 6
-	DiscreteIo64            bool // bit position 5
+	DiscreteIO32            bool // bit position 6
+	DiscreteIO64            bool // bit position 5
 	HealthStatus            bool // bit position 4
 	V49SpecCompliance       bool // bit position 3
 	VersionInformation      bool // bit position 2
@@ -264,8 +264,8 @@ func (f *IndicatorField1) Pack() []byte {
 	bitmap |= indicatorFieldUint(f.Spectrum, 10)
 	bitmap |= indicatorFieldUint(f.SectorStepScan, 9)
 	bitmap |= indicatorFieldUint(f.IndexList, 7)
-	bitmap |= indicatorFieldUint(f.DiscreteIo32, 6)
-	bitmap |= indicatorFieldUint(f.DiscreteIo64, 5)
+	bitmap |= indicatorFieldUint(f.DiscreteIO32, 6)
+	bitmap |= indicatorFieldUint(f.DiscreteIO64, 5)
 	bitmap |= indicatorFieldUint(f.HealthStatus, 4)
 	bitmap |= indicatorFieldUint(f.V49SpecCompliance, 3)
 	bitmap |= indicatorFieldUint(f.VersionInformation, 2)
@@ -296,8 +296,8 @@ func (f *IndicatorField1) Unpack(buf []byte) {
 	f.Spectrum = indicatorFieldBool(bitmap, 10)
 	f.SectorStepScan = indicatorFieldBool(bitmap, 9)
 	f.IndexList = indicatorFieldBool(bitmap, 7)
-	f.DiscreteIo32 = indicatorFieldBool(bitmap, 6)
-	f.DiscreteIo64 = indicatorFieldBool(bitmap, 5)
+	f.DiscreteIO32 = indicatorFieldBool(bitmap, 6)
+	f.DiscreteIO64 = indicatorFieldBool(bitmap, 5)
 	f.HealthStatus = indicatorFieldBool(bitmap, 4)
 	f.V49SpecCompliance = indicatorFieldBool(bitmap, 3)
 	f.VersionInformation = indicatorFieldBool(bitmap, 2)

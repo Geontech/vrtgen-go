@@ -64,7 +64,7 @@ func TestHeaderPacketType(t *testing.T) {
 		},
 		{
 			name:       "SignalDataStreamId",
-			packetType: SignalDataStreamId,
+			packetType: SignalDataStreamID,
 		},
 		{
 			name:       "ExtensionData",
@@ -72,7 +72,7 @@ func TestHeaderPacketType(t *testing.T) {
 		},
 		{
 			name:       "ExtensionDataStreamId",
-			packetType: ExtensionDataStreamId,
+			packetType: ExtensionDataStreamID,
 		},
 		{
 			name:       "Context",

@@ -25,13 +25,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestClassIdSize(t *testing.T) {
-	d := ClassId{}
+func TestClassIDSize(t *testing.T) {
+	d := ClassID{}
 	assert.Equal(t, classIdBytes, d.Size())
 }
 
-func TestClassIdDefault(t *testing.T) {
-	d := ClassId{}
+func TestClassIDDefault(t *testing.T) {
+	d := ClassID{}
 	assert.Equal(t, uint8(0), d.PadBitCount)
 	assert.Equal(t, uint32(0), d.Oui)
 	assert.Equal(t, uint16(0), d.InformationCode)
@@ -50,7 +50,7 @@ func TestClassIdDefault(t *testing.T) {
 	assert.Equal(t, uint16(0), d.PacketCode)
 }
 
-func TestClassId(t *testing.T) {
+func TestClassID(t *testing.T) {
 	cases := []struct {
 		name            string
 		padBitCount     uint8
@@ -83,7 +83,7 @@ func TestClassId(t *testing.T) {
 
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			d := ClassId{}
+			d := ClassID{}
 			d.PadBitCount = tc.padBitCount
 			d.Oui = tc.oui
 			d.InformationCode = tc.informationCode
