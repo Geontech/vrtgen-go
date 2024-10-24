@@ -10,12 +10,12 @@ import (
 
 func TestCif0Size(t *testing.T) {
 	c := Cif0{}
-	assert.Equal(t, indicatorFieldBytes, c.Size())
+	assert.Equal(t, uint32(4), c.Size())
 }
 
 func TestGainSize(t *testing.T) {
 	g := Gain{}
-	assert.Equal(t, gainBytes, g.Size())
+	assert.Equal(t, uint32(4), g.Size())
 }
 
 func TestGainDefault(t *testing.T) {
@@ -120,7 +120,7 @@ func TestGain(t *testing.T) {
 
 func TestDeviceIdentifierSize(t *testing.T) {
 	d := DeviceIdentifier{}
-	assert.Equal(t, deviceIdentifierBytes, d.Size())
+	assert.Equal(t, uint32(8), d.Size())
 }
 
 func TestDeviceIdentifierDefault(t *testing.T) {
@@ -185,7 +185,7 @@ func TestDeviceIdentifier(t *testing.T) {
 
 func TestEphemerisSize(t *testing.T) {
 	e := Ephemeris{}
-	assert.Equal(t, ephemerisBytes, e.Size())
+	assert.Equal(t, uint32(52), e.Size())
 }
 
 func TestEphemerisDefault(t *testing.T) {
@@ -407,7 +407,7 @@ func TestEphemeris(t *testing.T) {
 // Geolocation
 func TestGeolocationSize(t *testing.T) {
 	g := Geolocation{}
-	assert.Equal(t, geolocationBytes, g.Size())
+	assert.Equal(t, uint32(44), g.Size())
 }
 
 func TestGeolocationDefault(t *testing.T) {
@@ -676,7 +676,7 @@ func TestGpsAscii(t *testing.T) {
 
 func TestPayloadFormatSize(t *testing.T) {
 	p := PayloadFormat{}
-	assert.Equal(t, payloadFormatBytes, p.Size())
+	assert.Equal(t, uint32(8), p.Size())
 }
 
 func TestPayloadFormatDefault(t *testing.T) {

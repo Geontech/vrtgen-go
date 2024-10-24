@@ -4,13 +4,6 @@ import (
 	"encoding/binary"
 )
 
-const (
-	camBytes                = uint32(4)
-	warningErrorFieldsBytes = uint32(4)
-	wif0Bytes               = uint32(4)
-	eif0Bytes               = uint32(4)
-)
-
 type ControlFormat bool
 
 const (
@@ -31,8 +24,8 @@ type CAM struct {
 	TimingControl    uint8
 }
 
-func (c CAM) Size() uint32 {
-	return camBytes
+func (c *CAM) Size() uint32 {
+	return 4
 }
 
 func (c *CAM) Pack() []byte {
@@ -75,10 +68,6 @@ type ControlCAM struct {
 	ReqEr bool
 }
 
-func (c ControlCAM) Size() uint32 {
-	return camBytes
-}
-
 func (c *ControlCAM) Pack() []byte {
 	buf := c.CAM.Pack()
 	var bitmap uint32
@@ -110,10 +99,6 @@ type AcknowledgeCAM struct {
 	AckEr               bool
 	PartialAction       bool
 	ScheduledOrExecuted bool
-}
-
-func (a AcknowledgeCAM) Size() uint32 {
-	return camBytes
 }
 
 func (a *AcknowledgeCAM) Pack() []byte {
@@ -152,10 +137,6 @@ type WIF0 struct {
 	Wif1Enable bool
 }
 
-func (w *WIF0) Size() uint32 {
-	return wif0Bytes
-}
-
 func (w *WIF0) Pack() []byte {
 	w.IndicatorField0 = IndicatorField0{
 		If7Enable: w.Wif7Enable,
@@ -180,10 +161,6 @@ type EIF0 struct {
 	Eif3Enable bool
 	Eif2Enable bool
 	Eif1Enable bool
-}
-
-func (e *EIF0) Size() uint32 {
-	return eif0Bytes
 }
 
 func (e *EIF0) Pack() []byte {
@@ -236,8 +213,8 @@ type WarningErrorFields struct {
 	RegionalInterference      bool
 }
 
-func (w WarningErrorFields) Size() uint32 {
-	return warningErrorFieldsBytes
+func (w *WarningErrorFields) Size() uint32 {
+	return 4
 }
 
 func (w *WarningErrorFields) Pack() []byte {

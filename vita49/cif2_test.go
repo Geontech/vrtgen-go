@@ -8,5 +8,5 @@ import (
 
 func TestCif2Size(t *testing.T) {
 	c := Cif2{}
-	assert.Equal(t, indicatorFieldBytes, c.Size())
+	assert.Equal(t, uint32(4), c.Size())
 }

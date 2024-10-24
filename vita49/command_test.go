@@ -6,9 +6,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCAMBytes(t *testing.T) {
+func TestCAMSize(t *testing.T) {
 	c := CAM{}
-	assert.Equal(t, camBytes, c.Size())
+	assert.Equal(t, uint32(4), c.Size())
 }
 
 func TestCAMDefault(t *testing.T) {
@@ -139,6 +139,11 @@ func TestCAM(t *testing.T) {
 			assert.Equal(t, tc.timingControl, c.TimingControl)
 		})
 	}
+}
+
+func TestControlCAMSize(t *testing.T) {
+	c := ControlCAM{}
+	assert.Equal(t, uint32(4), c.Size())
 }
 
 func TestControlCAMDefault(t *testing.T) {
