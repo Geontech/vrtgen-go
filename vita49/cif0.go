@@ -24,10 +24,6 @@ import (
 	"encoding/binary"
 )
 
-type Cif0 struct {
-	IndicatorField0
-}
-
 // Gain
 type Gain struct {
 	Stage1 float64
@@ -263,8 +259,8 @@ func (g *GpsAscii) Unpack(buf []byte) {
 	g.AsciiSentences = buf[8:]
 }
 
-// Payload Format
-type PayloadFormat struct {
+// Signal Data Format
+type SignalDataFormat struct {
 	PackingMethod        bool
 	RealComplexType      uint8
 	DataItemFormat       uint8
@@ -278,11 +274,11 @@ type PayloadFormat struct {
 	VectorSize           uint32
 }
 
-func (p *PayloadFormat) Size() uint32 {
+func (p *SignalDataFormat) Size() uint32 {
 	return 8
 }
 
-func (p *PayloadFormat) Pack() []byte {
+func (p *SignalDataFormat) Pack() []byte {
 	buf := make([]byte, p.Size())
 	word1 := uint32(0)
 	if p.PackingMethod {
@@ -322,7 +318,7 @@ func (p *PayloadFormat) Pack() []byte {
 	return buf
 }
 
-func (p *PayloadFormat) Unpack(buf []byte) {
+func (p *SignalDataFormat) Unpack(buf []byte) {
 	vectorSize := uint32(binary.BigEndian.Uint16(buf[6:]))
 	if vectorSize > 0 {
 		p.VectorSize = vectorSize + 1

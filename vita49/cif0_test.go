@@ -27,11 +27,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCif0Size(t *testing.T) {
-	c := Cif0{}
-	assert.Equal(t, uint32(4), c.Size())
-}
-
 func TestGainSize(t *testing.T) {
 	g := Gain{}
 	assert.Equal(t, uint32(4), g.Size())
@@ -693,13 +688,13 @@ func TestGpsAscii(t *testing.T) {
 
 // Payload Format
 
-func TestPayloadFormatSize(t *testing.T) {
-	p := PayloadFormat{}
+func TestSignalDataFormatSize(t *testing.T) {
+	p := SignalDataFormat{}
 	assert.Equal(t, uint32(8), p.Size())
 }
 
-func TestPayloadFormatDefault(t *testing.T) {
-	p := PayloadFormat{}
+func TestSignalDataFormatDefault(t *testing.T) {
+	p := SignalDataFormat{}
 	assert.Equal(t, false, p.PackingMethod)
 	assert.Equal(t, uint8(0), p.RealComplexType)
 	assert.Equal(t, uint8(0), p.DataItemFormat)
@@ -731,7 +726,7 @@ func TestPayloadFormatDefault(t *testing.T) {
 	assert.Equal(t, uint32(0), p.VectorSize)
 }
 
-func TestPayloadFormat(t *testing.T) {
+func TestSignalDataFormat(t *testing.T) {
 	cases := []struct {
 		name                 string
 		packingmethod        bool
@@ -815,7 +810,7 @@ func TestPayloadFormat(t *testing.T) {
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			p := PayloadFormat{}
+			p := SignalDataFormat{}
 			p.PackingMethod = tc.packingmethod
 			p.RealComplexType = tc.realcomplextype
 			p.DataItemFormat = tc.dataitemformat

@@ -53,10 +53,10 @@ type IndicatorField0 struct {
 	EphemerisRefID           bool // bit position 10
 	GpsAscii                 bool // bit position 9
 	ContextAssociationLists  bool // bit position 8
-	If7Enable                bool // bit position 7
-	If3Enable                bool // bit position 3
-	If2Enable                bool // bit position 2
-	If1Enable                bool // bit position 1
+	IF7Enable                bool // bit position 7
+	IF3Enable                bool // bit position 3
+	IF2Enable                bool // bit position 2
+	IF1Enable                bool // bit position 1
 }
 
 type IndicatorField1 struct {
@@ -201,10 +201,10 @@ func (f *IndicatorField0) Pack() []byte {
 	bitmap |= indicatorFieldUint(f.EphemerisRefID, 10)
 	bitmap |= indicatorFieldUint(f.GpsAscii, 9)
 	bitmap |= indicatorFieldUint(f.ContextAssociationLists, 8)
-	bitmap |= indicatorFieldUint(f.If7Enable, 7)
-	bitmap |= indicatorFieldUint(f.If3Enable, 3)
-	bitmap |= indicatorFieldUint(f.If2Enable, 2)
-	bitmap |= indicatorFieldUint(f.If1Enable, 1)
+	bitmap |= indicatorFieldUint(f.IF7Enable, 7)
+	bitmap |= indicatorFieldUint(f.IF3Enable, 3)
+	bitmap |= indicatorFieldUint(f.IF2Enable, 2)
+	bitmap |= indicatorFieldUint(f.IF1Enable, 1)
 	binary.BigEndian.PutUint32(buf, bitmap)
 	return buf
 }
@@ -235,10 +235,10 @@ func (f *IndicatorField0) Unpack(buf []byte) {
 	f.EphemerisRefID = indicatorFieldBool(bitmap, 10)
 	f.GpsAscii = indicatorFieldBool(bitmap, 9)
 	f.ContextAssociationLists = indicatorFieldBool(bitmap, 8)
-	f.If7Enable = indicatorFieldBool(bitmap, 7)
-	f.If3Enable = indicatorFieldBool(bitmap, 3)
-	f.If2Enable = indicatorFieldBool(bitmap, 2)
-	f.If1Enable = indicatorFieldBool(bitmap, 1)
+	f.IF7Enable = indicatorFieldBool(bitmap, 7)
+	f.IF3Enable = indicatorFieldBool(bitmap, 3)
+	f.IF2Enable = indicatorFieldBool(bitmap, 2)
+	f.IF1Enable = indicatorFieldBool(bitmap, 1)
 }
 
 func (f *IndicatorField1) Pack() []byte {

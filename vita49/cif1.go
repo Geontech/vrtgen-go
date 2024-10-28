@@ -43,10 +43,6 @@ const (
 	versionInformationBytes   = uint32(8)
 )
 
-type Cif1 struct {
-	IndicatorField1
-}
-
 // Polarization
 // Represents antenna polarization with tilt (inclination) and ellipticity angles
 type Polarization struct {
