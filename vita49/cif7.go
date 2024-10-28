@@ -23,23 +23,6 @@ import (
 	"encoding/binary"
 )
 
-type Cif7 struct {
-	IndicatorField7
-	CurrentValue      uint32
-	AverageValue      uint32
-	MedianValue       uint32
-	StandardDeviation uint32
-	MaxValue          uint32
-	MinValue          uint32
-	Precision         uint32
-	Accuracy          uint32
-	Velocity          uint32
-	Acceleration      uint32
-	ThirdDerivative   uint32
-	Probability       Probability
-	Belief            Belief
-}
-
 // Represents the 2nd order probability that the standard probability
 // (1st order probability) is correct.
 type Belief struct {
