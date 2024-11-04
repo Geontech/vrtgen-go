@@ -372,3 +372,89 @@ func (f *IndicatorField2) Unpack(buf []byte) {
 	f.RfFootprint = indicatorFieldBool(bitmap, 4)
 	f.RfFootprintRange = indicatorFieldBool(bitmap, 3)
 }
+
+func (f *IndicatorField3) Pack() []byte {
+	buf := make([]byte, f.Size())
+	var bitmap uint32
+	bitmap |= indicatorFieldUint(f.TimestampDetails, 31)
+	bitmap |= indicatorFieldUint(f.TimestampSkew, 30)
+	bitmap |= indicatorFieldUint(f.RiseTime, 27)
+	bitmap |= indicatorFieldUint(f.FallTime, 26)
+	bitmap |= indicatorFieldUint(f.OffsetTime, 25)
+	bitmap |= indicatorFieldUint(f.PulseWidth, 24)
+	bitmap |= indicatorFieldUint(f.Period, 23)
+	bitmap |= indicatorFieldUint(f.Duration, 22)
+	bitmap |= indicatorFieldUint(f.Dwell, 21)
+	bitmap |= indicatorFieldUint(f.Jitter, 20)
+	bitmap |= indicatorFieldUint(f.Age, 17)
+	bitmap |= indicatorFieldUint(f.ShelfLife, 16)
+	bitmap |= indicatorFieldUint(f.AirTemperature, 7)
+	bitmap |= indicatorFieldUint(f.SeaGroundTemperature, 6)
+	bitmap |= indicatorFieldUint(f.Humidity, 5)
+	bitmap |= indicatorFieldUint(f.BarometricPressure, 4)
+	bitmap |= indicatorFieldUint(f.SeaSwellState, 3)
+	bitmap |= indicatorFieldUint(f.TroposphericState, 2)
+	bitmap |= indicatorFieldUint(f.NetworkID, 1)
+	binary.BigEndian.PutUint32(buf, bitmap)
+	return buf
+}
+
+func (f *IndicatorField3) Unpack(buf []byte) {
+	bitmap := binary.BigEndian.Uint32(buf)
+	f.TimestampDetails = indicatorFieldBool(bitmap, 31)
+	f.TimestampSkew = indicatorFieldBool(bitmap, 30)
+	f.RiseTime = indicatorFieldBool(bitmap, 27)
+	f.FallTime = indicatorFieldBool(bitmap, 26)
+	f.OffsetTime = indicatorFieldBool(bitmap, 25)
+	f.PulseWidth = indicatorFieldBool(bitmap, 24)
+	f.Period = indicatorFieldBool(bitmap, 23)
+	f.Duration = indicatorFieldBool(bitmap, 22)
+	f.Dwell = indicatorFieldBool(bitmap, 21)
+	f.Jitter = indicatorFieldBool(bitmap, 20)
+	f.Age = indicatorFieldBool(bitmap, 17)
+	f.ShelfLife = indicatorFieldBool(bitmap, 16)
+	f.AirTemperature = indicatorFieldBool(bitmap, 7)
+	f.SeaGroundTemperature = indicatorFieldBool(bitmap, 6)
+	f.Humidity = indicatorFieldBool(bitmap, 5)
+	f.BarometricPressure = indicatorFieldBool(bitmap, 4)
+	f.SeaSwellState = indicatorFieldBool(bitmap, 3)
+	f.TroposphericState = indicatorFieldBool(bitmap, 2)
+	f.NetworkID = indicatorFieldBool(bitmap, 1)
+}
+
+func (f *IndicatorField7) Pack() []byte {
+	buf := make([]byte, f.Size())
+	var bitmap uint32
+	bitmap |= indicatorFieldUint(f.CurrentValue, 31)
+	bitmap |= indicatorFieldUint(f.AverageValue, 30)
+	bitmap |= indicatorFieldUint(f.MedianValue, 29)
+	bitmap |= indicatorFieldUint(f.StandardDeviation, 28)
+	bitmap |= indicatorFieldUint(f.MaxValue, 27)
+	bitmap |= indicatorFieldUint(f.MinValue, 26)
+	bitmap |= indicatorFieldUint(f.Precision, 25)
+	bitmap |= indicatorFieldUint(f.Accuracy, 24)
+	bitmap |= indicatorFieldUint(f.FirstDerivative, 23)
+	bitmap |= indicatorFieldUint(f.SecondDerivative, 22)
+	bitmap |= indicatorFieldUint(f.ThirdDerivative, 21)
+	bitmap |= indicatorFieldUint(f.Probability, 20)
+	bitmap |= indicatorFieldUint(f.Belief, 19)
+	binary.BigEndian.PutUint32(buf, bitmap)
+	return buf
+}
+
+func (f *IndicatorField7) Unpack(buf []byte) {
+	bitmap := binary.BigEndian.Uint32(buf)
+	f.CurrentValue = indicatorFieldBool(bitmap, 31)
+	f.AverageValue = indicatorFieldBool(bitmap, 30)
+	f.MedianValue = indicatorFieldBool(bitmap, 29)
+	f.StandardDeviation = indicatorFieldBool(bitmap, 28)
+	f.MaxValue = indicatorFieldBool(bitmap, 27)
+	f.MinValue = indicatorFieldBool(bitmap, 26)
+	f.Precision = indicatorFieldBool(bitmap, 25)
+	f.Accuracy = indicatorFieldBool(bitmap, 24)
+	f.FirstDerivative = indicatorFieldBool(bitmap, 23)
+	f.SecondDerivative = indicatorFieldBool(bitmap, 22)
+	f.ThirdDerivative = indicatorFieldBool(bitmap, 21)
+	f.Probability = indicatorFieldBool(bitmap, 20)
+	f.Belief = indicatorFieldBool(bitmap, 19)
+}
